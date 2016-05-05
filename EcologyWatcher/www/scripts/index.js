@@ -13,7 +13,13 @@
         document.addEventListener( 'resume', onResume.bind( this ), false );
         
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
+        navigator.geolocation.getCurrentPosition(onSuccess);
+
     };
+
+    function onSuccess() {
+
+    }
 
     function onPause() {
         // TODO: This application has been suspended. Save application state here.
