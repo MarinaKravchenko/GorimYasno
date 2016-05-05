@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="EcologyWatcher.Service.Ecology" CodeBehind="Ecology.svc.cs" %>

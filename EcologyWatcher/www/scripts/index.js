@@ -13,13 +13,11 @@
         document.addEventListener( 'resume', onResume.bind( this ), false );
         
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
-        navigator.geolocation.getCurrentPosition(onSuccess);
+        
+
+        document.getElementById('btn_get_coords').addEventListener('click', reply_click, false);
 
     };
-
-    function onSuccess() {
-
-    }
 
     function onPause() {
         // TODO: This application has been suspended. Save application state here.
@@ -28,4 +26,13 @@
     function onResume() {
         // TODO: This application has been reactivated. Restore application state here.
     };
+
+    function reply_click() {
+        navigator.geolocation.getCurrentPosition(onSuccess);
+    }
+    function onSuccess(position) {
+        var div = document.getElementById('myDiv');
+        div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
+    }
+    
 } )();
