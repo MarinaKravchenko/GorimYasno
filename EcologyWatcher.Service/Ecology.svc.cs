@@ -27,8 +27,9 @@ namespace EcologyWatcher.Service
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json, UriTemplate = "addwork")]
-        public void NewMessage(Message message)
+        public string NewMessage(Message message)
         {
+            return "OK!";
         }
     }
 }
