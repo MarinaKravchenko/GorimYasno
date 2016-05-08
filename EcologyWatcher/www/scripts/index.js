@@ -15,59 +15,63 @@
         document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
         document.getElementById('btn_change_page').addEventListener('click', pageChange, false);
+        
     };
 
     function pageChange() {
-        window.open('Login.html');
+        window.location = 'NewMessage.html';
+        var list = ['Fire', 'Flood', 'Smoke'];
+        var select = document.getElementById('situations');
+        var pos = select.positions;
+        for (var i = 0; i < list.length; i++) {
+            pos[pos.length] = new Option(list[i], 'Lala');
+        }
     }
 
-    function messagePost(xmlHttp) {
-
-        var xmlhttp = getXmlHttp()
-        xmlhttp.open('POST', 'http://localhost:56989/Ecology.svc/addwork', true);
-        xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        xmlhttp.send(JSON.stringify({
-            "Description": "Everything is very bad",
-            "SituationId": "1",
-            "Longitude": "55",
-            "Latitude": "35",
-            "PlaceName": "Moscow"
+    function messagePost() {
+        send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
+            Description: "Everything is very bad",
+            SituationId: "1",
+            Longitude: "55",
+            Latitude: "35",
+            PlaceName: "Moscow"
         }), function (x) {
-            console.log(this.responseText);
-        });
+            var div = document.getElementById('postDiv');
+            div.innerHTML = x;
+        })
+    }
 
-   //function send(url, method, data, callback) {
-
-   //         var xmlhttp = getXmlHttp()
-   //         xmlHttp.onreadystatechange = function () {
-   //             if (xmlHttp.readyState == 4) {
-   //                 var obj = xmlHttp.responseText;
-   //                 if (obj == null || obj == "") {
-   //                     //если ничего не вернулось - ошибка
-   //                     callback(null);
-   //                 }
-   //                 else {
-   //                     //успешное завершение запроса
-   //                     try {
-   //                         var result = eval("(" + obj + ")");
-   //                         callback(result);
-   //                     }
-   //                     catch (EX) {
-   //                         return (null);
-   //                     }
-   //                 }
-   //             }
-   //         }
-   //     }
-   }
+    function send(url, method, data, callback) {
+        var xmlHttp = getXmlHttp();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4) {
+                var obj = xmlHttp.responseText;
+                if (obj == null || obj == "") {
+                    callback(null);
+                }
+                else {
+                    try {
+                        var result = eval("(" + obj + ")");
+                        callback(JSON.stringify(result));
+                    }
+                    catch (EX) {
+                        return (null);
+                    }
+                }
+            }
+        }
+        xmlHttp.open(method, url, true);
+        xmlHttp.setRequestHeader("Content-type", "application/json");
+        xmlHttp.send(data);
+    }
 
     function messageGet() {
-        var xmlhttp = getXmlHttp()
+        var xmlhttp = getXmlHttp();
         xmlhttp.open('GET', 'http://localhost:56989/Ecology.svc/work/Hello!', true);
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
-                    var div = document.getElementById('yourDiv');
+                    var div = document.getElementById('getDiv');
                     div.innerHTML = xmlhttp.responseText;
                 }
             }
@@ -76,20 +80,16 @@
     }
 
     function getXmlHttp() {
-        var xmlhttp;
-        try {
-            xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            try {
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (E) {
-                xmlhttp = false;
+        var xmlHttp;
+        try { xmlHttp = new XMLHttpRequest(); }
+        catch (e) {
+            try { xmlHttp = new ActiveXObject("Msxml2.XMLHTTP"); }
+            catch (e) {
+                try { xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+                catch (e) { alert("This application only works in browsers with AJAX support"); }
             }
         }
-        if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
-            xmlhttp = new XMLHttpRequest();
-        }
-        return xmlhttp;
+        return xmlHttp;
     }
 
     function onPause() {
@@ -105,7 +105,7 @@
     }
 
     function onSuccess(position) {
-        var div = document.getElementById('myDiv');
+        var div = document.getElementById('coordDiv');
         div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
     
