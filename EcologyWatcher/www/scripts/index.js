@@ -15,16 +15,22 @@
         document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
         document.getElementById('btn_change_page').addEventListener('click', pageChange, false);
+        document.getElementById('btn_login').addEventListener('click', login, false);
         
     };
 
     function pageChange() {
         window.location = 'NewMessage.html';
+      //  window.focus = 'NewMessage.html';
         var list = ['Fire', 'Flood', 'Smoke'];
         var select = document.getElementById('situations');
-        var pos = select.positions;
+        var options = select.options;
+
         for (var i = 0; i < list.length; i++) {
-            pos[pos.length] = new Option(list[i], 'Lala');
+            var opt = document.createElement('option');
+            opt.value = list[i];
+            opt.innerHTML = list[i];
+            select.appendChild(opt);
         }
     }
 
@@ -107,6 +113,12 @@
     function onSuccess(position) {
         var div = document.getElementById('coordDiv');
         div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
+    }
+
+    function login()
+    {
+        coordDiv.hidden = true;
+        btn_get_coords.hidden = true;
     }
     
 } )();

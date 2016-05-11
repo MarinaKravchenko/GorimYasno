@@ -22,6 +22,25 @@
     <button type="button" id="btn_post_message">Post message</button>
     <div id="postDiv"></div>
     <button type="button" id="btn_change_page">Next page</button>
+    <div id="loginDiv" ></div>
+    <button type="button" id="btn_login">Login</button>
+
+    <form>
+        <p>
+            Please, choose your situation:<br />
+            <select id="situations">
+                <option value="Other">Other</option>
+            </select><br />
+            Describe it:<br />
+            <input id="description" /><br />
+            When did it happen? <br />
+            <input type="date" id="date" /><br />
+            <input type="radio" name="use_GPS/adress">Use my current coordinates<br />
+            <input type="radio" name="use_GPS/adress">Enter adress:<br />
+            <input /> <br />
+            <input type="submit" name="submit"/>
+        </p>
+    </form>
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
