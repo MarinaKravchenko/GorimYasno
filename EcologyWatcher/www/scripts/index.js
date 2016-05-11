@@ -15,7 +15,7 @@
         document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
         document.getElementById('btn_change_page').addEventListener('click', pageChange, false);
-        document.getElementById('btn_login').addEventListener('click', login, false);
+        document.getElementById('btn_login').addEventListener('click', loginUser, false);
         
     };
 
@@ -35,6 +35,9 @@
     }
 
     function messagePost() {
+        newMessageDiv.hidden = false;
+        buttonsDiv.hidden = true;
+
         send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
             Description: "Everything is very bad",
             SituationId: "1",
@@ -42,7 +45,7 @@
             Latitude: "35",
             PlaceName: "Moscow"
         }), function (x) {
-            var div = document.getElementById('postDiv');
+            var div = document.getElementById('answerDiv');
             div.innerHTML = x;
         })
     }
@@ -77,7 +80,7 @@
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
-                    var div = document.getElementById('getDiv');
+                    var div = document.getElementById('answerDiv');
                     div.innerHTML = xmlhttp.responseText;
                 }
             }
@@ -111,14 +114,13 @@
     }
 
     function onSuccess(position) {
-        var div = document.getElementById('coordDiv');
+        var div = document.getElementById('answerDiv');
         div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
 
-    function login()
-    {
-        coordDiv.hidden = true;
-        btn_get_coords.hidden = true;
+    function loginUser(){
+        buttonsDiv.hidden = true;
+        loginDiv.hidden = false;
     }
     
 } )();

@@ -15,17 +15,24 @@
 </head>
 <body>
     <p>Hello!</p>
+    <div id="buttonsDiv">
     <button type="button"  id="btn_get_coords">Get coordinates</button>
-    <div id="coordDiv"></div>
     <button type="button" id="btn_get_message">Get message</button>
-    <div id="getDiv"></div>
     <button type="button" id="btn_post_message">Post message</button>
-    <div id="postDiv"></div>
-    <button type="button" id="btn_change_page">Next page</button>
-    <div id="loginDiv" ></div>
     <button type="button" id="btn_login">Login</button>
+        </div>
 
-    <form>
+    <div id="answerDiv"></div>
+
+    <div id="loginDiv" hidden="hidden">
+        Login: <br />
+        <input type="text" name="login" /><br />
+        Password: <br />
+        <input type="password" name="password" /><br />
+        <input type="submit" value="Sign In" /><br/>
+    </div>
+
+    <div id="newMessageDiv" hidden = "hidden">
         <p>
             Please, choose your situation:<br />
             <select id="situations">
@@ -37,10 +44,10 @@
             <input type="date" id="date" /><br />
             <input type="radio" name="use_GPS/adress">Use my current coordinates<br />
             <input type="radio" name="use_GPS/adress">Enter adress:<br />
-            <input /> <br />
+            <input /> <br/>
             <input type="submit" name="submit"/>
         </p>
-    </form>
+    </div>
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
