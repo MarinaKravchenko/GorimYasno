@@ -16,23 +16,22 @@
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
         document.getElementById('btn_change_page').addEventListener('click', pageChange, false);
         document.getElementById('btn_login').addEventListener('click', loginUser, false);
-        
     };
 
-    function pageChange() {
-        window.location = 'NewMessage.html';
-      //  window.focus = 'NewMessage.html';
-        var list = ['Fire', 'Flood', 'Smoke'];
-        var select = document.getElementById('situations');
-        var options = select.options;
+    //function pageChange() {
+    //    window.location = 'NewMessage.html';
+    //  //  window.focus = 'NewMessage.html';
+    //    var list = ['Fire', 'Flood', 'Smoke'];
+    //    var select = document.getElementById('situations');
+    //    var options = select.options;
 
-        for (var i = 0; i < list.length; i++) {
-            var opt = document.createElement('option');
-            opt.value = list[i];
-            opt.innerHTML = list[i];
-            select.appendChild(opt);
-        }
-    }
+    //    for (var i = 0; i < list.length; i++) {
+    //        var opt = document.createElement('option');
+    //        opt.value = list[i];
+    //        opt.innerHTML = list[i];
+    //        select.appendChild(opt);
+    //    }
+    //}
 
     function messagePost() {
         newMessageDiv.hidden = false;
@@ -118,9 +117,32 @@
         div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
 
+    function tempo() {
+        buttonsDiv.hidden = true;
+    }
     function loginUser(){
         buttonsDiv.hidden = true;
         loginDiv.hidden = false;
+
+        send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
+            Login: "ivan_ivanov",
+            Password_Hash: "12345678"
+        }), function (x) {
+            var div = document.getElementById('answerDiv');
+            div.innerHTML = x;
+        })
+    }
+
+    function createNewUser()
+    {
+        send('http://localhost:56989/Ecology.svc/create', 'POST', JSON.stringify({
+            Login: "petr_petrov",
+            Password_Hash: "87654321",
+            Email: "p.petrov@mail.ru"
+        }), function (x) {
+            var div = document.getElementById('answerDiv');
+            div.innerHTML = x;
+        })
     }
     
 } )();

@@ -160,5 +160,64 @@ namespace EcologyWatcher.Service
 
             return list;
         }
+
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "login")]
+        public int LoginUser(User_Data user_data)
+        {
+            var temp = new User_Data();
+            try
+            {
+                var db = new ecologyWatchEntities();
+
+                temp = db.User_Data.Where(u => ((u.Login == user_data.Login) && (u.Password_Hash == user_data.Password_Hash)));
+
+                if (temp != null)
+                    return 1;
+                else
+                    return -1;
+            }
+            catch
+            {
+                return -2;
+            }
+        }
+
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "create")]
+        public int CreateNewnUser(User_Data user_data)
+        {
+            var temp = new User_Data();
+            try
+            {
+                var db = new ecologyWatchEntities();
+
+                var list = db.User_Data.Where(u => (u.Login == user_data.Login));
+                if (list == null)
+                {
+                    temp.Login = user_data.Login;
+                    temp.Password_Hash = user_data.Password_Hash;
+                    temp.Email = user_data.Email;
+                    temp.Is_Active = true;
+                    temp.Joined_On = DateTime.Now;
+
+                    db.User_Data.Add(temp);
+                    db.SaveChanges();
+                }
+            }
+            catch
+            {
+                return -1;
+            }
+
+            if (temp.User_Id > 0)
+            {
+                return temp.User_Id;
+            }
+
+            return -1;
+        }   
     }
 }
