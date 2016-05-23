@@ -1,0 +1,615 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище ecologyWatchModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Accident">
+          <Key>
+            <PropertyRef Name="Accident_Id" />
+          </Key>
+          <Property Name="Accident_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Situation_Id" Type="int" />
+          <Property Name="User_Id" Type="int" />
+          <Property Name="Status_Id" Type="int" />
+          <Property Name="Place_Lat" Type="float" />
+          <Property Name="Place_Long" Type="float" />
+          <Property Name="Place_Adress" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Accident_Details">
+          <Key>
+            <PropertyRef Name="Accident_Details_Id" />
+          </Key>
+          <Property Name="Accident_Details_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Accident_Id" Type="int" Nullable="false" />
+          <Property Name="Accident_Date" Type="datetime" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="250" />
+          <Property Name="Relation_Id" Type="int" />
+          <Property Name="Radius" Type="float" />
+        </EntityType>
+        <EntityType Name="Actual_Status">
+          <Key>
+            <PropertyRef Name="Status_Id" />
+          </Key>
+          <Property Name="Status_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status_Name" Type="nvarchar" MaxLength="30" />
+          <Property Name="Status_Icon" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="Picture_Id" />
+          </Key>
+          <Property Name="Picture_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Picture_Name" Type="nvarchar" MaxLength="30" />
+          <Property Name="Picture_Picture" Type="nvarchar" MaxLength="150" />
+          <Property Name="Accident_Details_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Relation">
+          <Key>
+            <PropertyRef Name="Relation_Id" />
+          </Key>
+          <Property Name="Relation_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Relation_Name" Type="nvarchar" MaxLength="25" />
+          <Property Name="Relation_Icon" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Session_Id" />
+          </Key>
+          <Property Name="Session_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ok" Type="bit" />
+          <Property Name="Last" Type="datetime" />
+          <Property Name="Started" Type="datetime" />
+          <Property Name="Code" Type="nvarchar" MaxLength="64" />
+          <Property Name="User_Auth_Id" Type="int" />
+          <Property Name="User_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Situation">
+          <Key>
+            <PropertyRef Name="Situation_Id" />
+          </Key>
+          <Property Name="Situation_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Situation_Name" Type="nvarchar" MaxLength="30" />
+          <Property Name="Situation_Icon" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="User_Auth">
+          <Key>
+            <PropertyRef Name="User_Auth_Id" />
+          </Key>
+          <Property Name="User_Auth_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Auth_Source" Type="nvarchar" MaxLength="2" />
+          <Property Name="Auth_Value" Type="nvarchar" MaxLength="50" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="User_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="User_Data">
+          <Key>
+            <PropertyRef Name="User_Id" />
+          </Key>
+          <Property Name="User_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="15" />
+          <Property Name="Password_Hash" Type="nvarchar" MaxLength="200" />
+          <Property Name="Is_Active" Type="bit" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Joined_On" Type="datetime" />
+        </EntityType>
+        <Association Name="R_11">
+          <End Role="User_Auth" Type="Self.User_Auth" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Auth">
+              <PropertyRef Name="User_Auth_Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="User_Auth_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_12">
+          <End Role="User_Data" Type="Self.User_Data" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Data">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_13">
+          <End Role="Accident" Type="Self.Accident" Multiplicity="1" />
+          <End Role="Accident_Details" Type="Self.Accident_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accident">
+              <PropertyRef Name="Accident_Id" />
+            </Principal>
+            <Dependent Role="Accident_Details">
+              <PropertyRef Name="Accident_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_14">
+          <End Role="Relation" Type="Self.Relation" Multiplicity="0..1" />
+          <End Role="Accident_Details" Type="Self.Accident_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Relation">
+              <PropertyRef Name="Relation_Id" />
+            </Principal>
+            <Dependent Role="Accident_Details">
+              <PropertyRef Name="Relation_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_15">
+          <End Role="Accident_Details" Type="Self.Accident_Details" Multiplicity="0..1" />
+          <End Role="Picture" Type="Self.Picture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accident_Details">
+              <PropertyRef Name="Accident_Details_Id" />
+            </Principal>
+            <Dependent Role="Picture">
+              <PropertyRef Name="Accident_Details_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_3">
+          <End Role="Situation" Type="Self.Situation" Multiplicity="0..1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Situation">
+              <PropertyRef Name="Situation_Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="Situation_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_4">
+          <End Role="User_Data" Type="Self.User_Data" Multiplicity="0..1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Data">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_9">
+          <End Role="Actual_Status" Type="Self.Actual_Status" Multiplicity="0..1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actual_Status">
+              <PropertyRef Name="Status_Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="Status_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ecologyWatchModelContainer">
+          <EntitySet Name="Accident" EntityType="Self.Accident" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Accident_Details" EntityType="Self.Accident_Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Actual_Status" EntityType="Self.Actual_Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Picture" EntityType="Self.Picture" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Relation" EntityType="Self.Relation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Session" EntityType="Self.Session" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Situation" EntityType="Self.Situation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_Auth" EntityType="Self.User_Auth" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_Data" EntityType="Self.User_Data" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="R_11" Association="Self.R_11">
+            <End Role="User_Auth" EntitySet="User_Auth" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="R_12" Association="Self.R_12">
+            <End Role="User_Data" EntitySet="User_Data" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="R_13" Association="Self.R_13">
+            <End Role="Accident" EntitySet="Accident" />
+            <End Role="Accident_Details" EntitySet="Accident_Details" />
+          </AssociationSet>
+          <AssociationSet Name="R_14" Association="Self.R_14">
+            <End Role="Relation" EntitySet="Relation" />
+            <End Role="Accident_Details" EntitySet="Accident_Details" />
+          </AssociationSet>
+          <AssociationSet Name="R_15" Association="Self.R_15">
+            <End Role="Accident_Details" EntitySet="Accident_Details" />
+            <End Role="Picture" EntitySet="Picture" />
+          </AssociationSet>
+          <AssociationSet Name="R_3" Association="Self.R_3">
+            <End Role="Situation" EntitySet="Situation" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="R_4" Association="Self.R_4">
+            <End Role="User_Data" EntitySet="User_Data" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="R_9" Association="Self.R_9">
+            <End Role="Actual_Status" EntitySet="Actual_Status" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ecologyWatchModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Accident">
+          <Key>
+            <PropertyRef Name="Accident_Id" />
+          </Key>
+          <Property Name="Accident_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Situation_Id" Type="Int32" />
+          <Property Name="User_Id" Type="Int32" />
+          <Property Name="Status_Id" Type="Int32" />
+          <Property Name="Place_Lat" Type="Double" />
+          <Property Name="Place_Long" Type="Double" />
+          <Property Name="Place_Adress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Accident_Details" Relationship="Self.R_13" FromRole="Accident" ToRole="Accident_Details" />
+          <NavigationProperty Name="Situation" Relationship="Self.R_3" FromRole="Accident" ToRole="Situation" />
+          <NavigationProperty Name="User_Data" Relationship="Self.R_4" FromRole="Accident" ToRole="User_Data" />
+          <NavigationProperty Name="Actual_Status" Relationship="Self.R_9" FromRole="Accident" ToRole="Actual_Status" />
+        </EntityType>
+        <EntityType Name="Accident_Details">
+          <Key>
+            <PropertyRef Name="Accident_Details_Id" />
+          </Key>
+          <Property Name="Accident_Details_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Accident_Id" Type="Int32" Nullable="false" />
+          <Property Name="Accident_Date" Type="DateTime" Precision="3" />
+          <Property Name="Comments" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Relation_Id" Type="Int32" />
+          <Property Name="Radius" Type="Double" />
+          <NavigationProperty Name="Accident" Relationship="Self.R_13" FromRole="Accident_Details" ToRole="Accident" />
+          <NavigationProperty Name="Relation" Relationship="Self.R_14" FromRole="Accident_Details" ToRole="Relation" />
+          <NavigationProperty Name="Picture" Relationship="Self.R_15" FromRole="Accident_Details" ToRole="Picture" />
+        </EntityType>
+        <EntityType Name="Actual_Status">
+          <Key>
+            <PropertyRef Name="Status_Id" />
+          </Key>
+          <Property Name="Status_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Accident" Relationship="Self.R_9" FromRole="Actual_Status" ToRole="Accident" />
+        </EntityType>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="Picture_Id" />
+          </Key>
+          <Property Name="Picture_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Picture_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Picture_Picture" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Accident_Details_Id" Type="Int32" />
+          <NavigationProperty Name="Accident_Details" Relationship="Self.R_15" FromRole="Picture" ToRole="Accident_Details" />
+        </EntityType>
+        <EntityType Name="Relation">
+          <Key>
+            <PropertyRef Name="Relation_Id" />
+          </Key>
+          <Property Name="Relation_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Relation_Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Relation_Icon" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Accident_Details" Relationship="Self.R_14" FromRole="Relation" ToRole="Accident_Details" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Session_Id" />
+          </Key>
+          <Property Name="Session_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ok" Type="Boolean" />
+          <Property Name="Last" Type="DateTime" Precision="3" />
+          <Property Name="Started" Type="DateTime" Precision="3" />
+          <Property Name="Code" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="User_Auth_Id" Type="Int32" />
+          <Property Name="User_Id" Type="Int32" />
+          <NavigationProperty Name="User_Auth" Relationship="Self.R_11" FromRole="Session" ToRole="User_Auth" />
+          <NavigationProperty Name="User_Data" Relationship="Self.R_12" FromRole="Session" ToRole="User_Data" />
+        </EntityType>
+        <EntityType Name="Situation">
+          <Key>
+            <PropertyRef Name="Situation_Id" />
+          </Key>
+          <Property Name="Situation_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Situation_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Situation_Icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Accident" Relationship="Self.R_3" FromRole="Situation" ToRole="Accident" />
+        </EntityType>
+        <EntityType Name="User_Auth">
+          <Key>
+            <PropertyRef Name="User_Auth_Id" />
+          </Key>
+          <Property Name="User_Auth_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Auth_Source" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Auth_Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="User_Id" Type="Int32" />
+          <NavigationProperty Name="Session" Relationship="Self.R_11" FromRole="User_Auth" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="User_Data">
+          <Key>
+            <PropertyRef Name="User_Id" />
+          </Key>
+          <Property Name="User_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Password_Hash" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Is_Active" Type="Boolean" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Joined_On" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Accident" Relationship="Self.R_4" FromRole="User_Data" ToRole="Accident" />
+          <NavigationProperty Name="Session" Relationship="Self.R_12" FromRole="User_Data" ToRole="Session" />
+        </EntityType>
+        <Association Name="R_13">
+          <End Role="Accident" Type="Self.Accident" Multiplicity="1" />
+          <End Role="Accident_Details" Type="Self.Accident_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accident">
+              <PropertyRef Name="Accident_Id" />
+            </Principal>
+            <Dependent Role="Accident_Details">
+              <PropertyRef Name="Accident_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_3">
+          <End Role="Situation" Type="Self.Situation" Multiplicity="0..1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Situation">
+              <PropertyRef Name="Situation_Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="Situation_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_4">
+          <End Role="User_Data" Type="Self.User_Data" Multiplicity="0..1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Data">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_9">
+          <End Role="Actual_Status" Type="Self.Actual_Status" Multiplicity="0..1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actual_Status">
+              <PropertyRef Name="Status_Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="Status_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_14">
+          <End Role="Relation" Type="Self.Relation" Multiplicity="0..1" />
+          <End Role="Accident_Details" Type="Self.Accident_Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Relation">
+              <PropertyRef Name="Relation_Id" />
+            </Principal>
+            <Dependent Role="Accident_Details">
+              <PropertyRef Name="Relation_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_15">
+          <End Role="Accident_Details" Type="Self.Accident_Details" Multiplicity="0..1" />
+          <End Role="Picture" Type="Self.Picture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accident_Details">
+              <PropertyRef Name="Accident_Details_Id" />
+            </Principal>
+            <Dependent Role="Picture">
+              <PropertyRef Name="Accident_Details_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_11">
+          <End Role="User_Auth" Type="Self.User_Auth" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Auth">
+              <PropertyRef Name="User_Auth_Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="User_Auth_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="R_12">
+          <End Role="User_Data" Type="Self.User_Data" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User_Data">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ecologyWatchEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accident" EntityType="Self.Accident" />
+          <EntitySet Name="Accident_Details" EntityType="Self.Accident_Details" />
+          <EntitySet Name="Actual_Status" EntityType="Self.Actual_Status" />
+          <EntitySet Name="Picture" EntityType="Self.Picture" />
+          <EntitySet Name="Relation" EntityType="Self.Relation" />
+          <EntitySet Name="Session" EntityType="Self.Session" />
+          <EntitySet Name="Situation" EntityType="Self.Situation" />
+          <EntitySet Name="User_Auth" EntityType="Self.User_Auth" />
+          <EntitySet Name="User_Data" EntityType="Self.User_Data" />
+          <AssociationSet Name="R_13" Association="Self.R_13">
+            <End Role="Accident" EntitySet="Accident" />
+            <End Role="Accident_Details" EntitySet="Accident_Details" />
+          </AssociationSet>
+          <AssociationSet Name="R_3" Association="Self.R_3">
+            <End Role="Situation" EntitySet="Situation" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="R_4" Association="Self.R_4">
+            <End Role="User_Data" EntitySet="User_Data" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="R_9" Association="Self.R_9">
+            <End Role="Actual_Status" EntitySet="Actual_Status" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="R_14" Association="Self.R_14">
+            <End Role="Relation" EntitySet="Relation" />
+            <End Role="Accident_Details" EntitySet="Accident_Details" />
+          </AssociationSet>
+          <AssociationSet Name="R_15" Association="Self.R_15">
+            <End Role="Accident_Details" EntitySet="Accident_Details" />
+            <End Role="Picture" EntitySet="Picture" />
+          </AssociationSet>
+          <AssociationSet Name="R_11" Association="Self.R_11">
+            <End Role="User_Auth" EntitySet="User_Auth" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="R_12" Association="Self.R_12">
+            <End Role="User_Data" EntitySet="User_Data" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ecologyWatchModelContainer" CdmEntityContainer="ecologyWatchEntities1">
+          <EntitySetMapping Name="Accident">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Accident">
+              <MappingFragment StoreEntitySet="Accident">
+                <ScalarProperty Name="Accident_Id" ColumnName="Accident_Id" />
+                <ScalarProperty Name="Situation_Id" ColumnName="Situation_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Status_Id" ColumnName="Status_Id" />
+                <ScalarProperty Name="Place_Lat" ColumnName="Place_Lat" />
+                <ScalarProperty Name="Place_Long" ColumnName="Place_Long" />
+                <ScalarProperty Name="Place_Adress" ColumnName="Place_Adress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Accident_Details">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Accident_Details">
+              <MappingFragment StoreEntitySet="Accident_Details">
+                <ScalarProperty Name="Accident_Details_Id" ColumnName="Accident_Details_Id" />
+                <ScalarProperty Name="Accident_Id" ColumnName="Accident_Id" />
+                <ScalarProperty Name="Accident_Date" ColumnName="Accident_Date" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Relation_Id" ColumnName="Relation_Id" />
+                <ScalarProperty Name="Radius" ColumnName="Radius" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Actual_Status">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Actual_Status">
+              <MappingFragment StoreEntitySet="Actual_Status">
+                <ScalarProperty Name="Status_Id" ColumnName="Status_Id" />
+                <ScalarProperty Name="Status_Name" ColumnName="Status_Name" />
+                <ScalarProperty Name="Status_Icon" ColumnName="Status_Icon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Picture">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Picture">
+              <MappingFragment StoreEntitySet="Picture">
+                <ScalarProperty Name="Picture_Id" ColumnName="Picture_Id" />
+                <ScalarProperty Name="Picture_Name" ColumnName="Picture_Name" />
+                <ScalarProperty Name="Picture_Picture" ColumnName="Picture_Picture" />
+                <ScalarProperty Name="Accident_Details_Id" ColumnName="Accident_Details_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Relation">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Relation">
+              <MappingFragment StoreEntitySet="Relation">
+                <ScalarProperty Name="Relation_Id" ColumnName="Relation_Id" />
+                <ScalarProperty Name="Relation_Name" ColumnName="Relation_Name" />
+                <ScalarProperty Name="Relation_Icon" ColumnName="Relation_Icon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Session">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="Session_Id" ColumnName="Session_Id" />
+                <ScalarProperty Name="Ok" ColumnName="Ok" />
+                <ScalarProperty Name="Last" ColumnName="Last" />
+                <ScalarProperty Name="Started" ColumnName="Started" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="User_Auth_Id" ColumnName="User_Auth_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Situation">
+            <EntityTypeMapping TypeName="ecologyWatchModel.Situation">
+              <MappingFragment StoreEntitySet="Situation">
+                <ScalarProperty Name="Situation_Id" ColumnName="Situation_Id" />
+                <ScalarProperty Name="Situation_Name" ColumnName="Situation_Name" />
+                <ScalarProperty Name="Situation_Icon" ColumnName="Situation_Icon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_Auth">
+            <EntityTypeMapping TypeName="ecologyWatchModel.User_Auth">
+              <MappingFragment StoreEntitySet="User_Auth">
+                <ScalarProperty Name="User_Auth_Id" ColumnName="User_Auth_Id" />
+                <ScalarProperty Name="Auth_Source" ColumnName="Auth_Source" />
+                <ScalarProperty Name="Auth_Value" ColumnName="Auth_Value" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_Data">
+            <EntityTypeMapping TypeName="ecologyWatchModel.User_Data">
+              <MappingFragment StoreEntitySet="User_Data">
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password_Hash" ColumnName="Password_Hash" />
+                <ScalarProperty Name="Is_Active" ColumnName="Is_Active" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Joined_On" ColumnName="Joined_On" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

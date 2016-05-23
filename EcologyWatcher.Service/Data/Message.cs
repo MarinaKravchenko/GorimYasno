@@ -19,5 +19,7 @@ namespace EcologyWatcher.Service.Data
         public double Latitude { get; set; }
         [DataMember]
         public string PlaceName { get; set; }
+        [DataMember]
+        public double Radius { get; set; }
     }
 }

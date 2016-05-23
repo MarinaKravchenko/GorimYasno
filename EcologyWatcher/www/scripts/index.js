@@ -7,15 +7,24 @@
 
     document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
 
+    var buttonsDiv;
+    var loginDiv;
+    var newUserDiv;
+    var description;
+    var situations;
+    var newMessageDiv;
+    var btn_get_coords;
+    var address;
+
     function onDeviceReady() {
         // Handle the Cordova pause and resume events
-        document.addEventListener( 'pause', onPause.bind( this ), false );
-        document.addEventListener( 'resume', onResume.bind( this ), false );
+        document.addEventListener('pause', onPause.bind( this ), false );
+        document.addEventListener('resume', onResume.bind( this ), false );
         document.getElementById('btn_get_coords').addEventListener('click', replyClick, false);
         document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-        document.getElementById('btn_change_page').addEventListener('click', pageChange, false);
         document.getElementById('btn_login').addEventListener('click', loginUser, false);
+
     };
 
     //function pageChange() {
@@ -34,12 +43,29 @@
     //}
 
     function messagePost() {
+
+        newMessageDiv = document.getElementById('newMessageDiv');
+        buttonsDiv = document.getElementById('buttonsDiv');
         newMessageDiv.hidden = false;
         buttonsDiv.hidden = true;
 
+        document.getElementByValue('GPS').addEventListener('check', locationByAddress, false);
+        document.getElementById('btn_send_ready_message').addEventListener('click', sendMessage, false);
+    }
+
+    function locationByAddress() {
+       address = document.getElementById('address');
+       address.setEnabled(true);
+       btn_get_coords = document.getElementById('btn_get_coords');
+       btn_get_coords.setEnabled(false);
+    }
+
+    function sendMessage(){
+        
+
         send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
-            Description: "Everything is very bad",
-            SituationId: "1",
+            Description: document.getElementById('description').value,
+            SituationId: document.getElementById('situations').value,
             Longitude: "55",
             Latitude: "35",
             PlaceName: "Moscow"
@@ -117,16 +143,23 @@
         div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
 
-    function tempo() {
-        buttonsDiv.hidden = true;
-    }
-    function loginUser(){
+    function loginUser() {
+
+        buttonsDiv = document.getElementById('buttonsDiv');
+        loginDiv = document.getElementById('loginDiv');
         buttonsDiv.hidden = true;
         loginDiv.hidden = false;
 
+        document.getElementById('btn_sign_up').addEventListener('click', signUp, false);
+        document.getElementById('btn_create_new_user').addEventListener('click', createNewUser, false);
+        document.getElementById('btn_back').addEventListener('click', goBack, false);
+    }
+
+    function signUp() {
+
         send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
-            Login: "ivan_ivanov",
-            Password_Hash: "12345678"
+            Login: document.getElementById('login').value,
+            Password_Hash: document.getElementById('password').value
         }), function (x) {
             var div = document.getElementById('answerDiv');
             div.innerHTML = x;
@@ -135,14 +168,31 @@
 
     function createNewUser()
     {
+        loginDiv = document.getElementById('loginDiv');
+        newUserDiv = document.getElementById('newUserDiv');
+        loginDiv.hidden = true;
+        newUserDiv.hidden = false;
+
+        document.getElementById('btn_sign_up_new').addEventListener('click', signNewUser, false);
+        document.getElementById('btn_back').addEventListener('click', goBack, false);
+
+    }
+
+    function signNewUser() {
+
         send('http://localhost:56989/Ecology.svc/create', 'POST', JSON.stringify({
-            Login: "petr_petrov",
-            Password_Hash: "87654321",
-            Email: "p.petrov@mail.ru"
+            Login: document.getElementById('login_new').value,
+            Password_Hash: document.getElementById('password_new').value,
+            Email: document.getElementById('email_new').value
         }), function (x) {
             var div = document.getElementById('answerDiv');
             div.innerHTML = x;
         })
+    }
+
+    function goBack(){
+        buttonsDiv = document.getElementById('buttonsDiv');
+        buttonsDiv.hidden = false;
     }
     
 } )();

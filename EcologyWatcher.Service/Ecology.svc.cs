@@ -31,19 +31,28 @@ namespace EcologyWatcher.Service
         public int NewMessage(Message message)
         {
             var accident = new Accident();
+            var accident_details = new Accident_Details();
+
             try
             {
-                var db = new ecologyWatchEntities();
+                var db = new ecologyWatchEntities1();
 
-                accident.Accident_Description = message.Description;
                 accident.Status_Id = 1;
-                accident.Date = DateTime.Now;
+                accident.User_Id = 1;
+                accident.Situation_Id = message.SituationId;
                 accident.Place_Lat = message.Latitude;
                 accident.Place_Long = message.Longitude;
                 accident.Place_Adress = message.PlaceName;
-                accident.Situation_Id = message.SituationId;
+
+                accident_details.Accident_Date = DateTime.Now;
+                accident_details.Comments = message.Description;
+                accident_details.Accident_Id = accident.Accident_Id; //??
+                accident_details.Relation_Id = 1;
+                accident_details.Radius = message.Radius;
+
 
                 db.Accident.Add(accident);
+                db.Accident_Details.Add(accident_details);
                 db.SaveChanges();
             }
             catch
@@ -65,7 +74,37 @@ namespace EcologyWatcher.Service
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews/{id}")]
         public bool AddNews(string id, Message message)
         {
+            var db = new ecologyWatchEntities1();
 
+            var minX = message.Latitude - message.Radius / 111.3;
+            var maxX = message.Latitude + message.Radius / 111.3;
+            var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
+            var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
+
+            var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
+
+            var accident_details = new Accident_Details();
+
+            try
+            {
+                accident_details.Accident_Date = DateTime.Now;
+                accident_details.Comments = message.Description;
+                accident_details.Accident_Id = accident.Accident_Id;
+                accident_details.Relation_Id = 1;
+                accident_details.Radius = message.Radius;
+            }
+            catch
+            {
+                return false;
+
+            }
+
+            if (accident.Accident_Id > 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         [OperationContract]
@@ -73,7 +112,16 @@ namespace EcologyWatcher.Service
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "remove/{id}")]
         public bool Remove(string id)
         {
+            //вижу смысл этого метода, только если пользователь ошибся при внесении данных и хочет их удалить
 
+            var db = new ecologyWatchEntities1();
+
+            var accident = new Accident();
+
+            try
+            {
+                
+            }
         }
 
         [OperationContract]
@@ -85,16 +133,21 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities();
-                List<Accident> temp = db.Accident.Where(a => ((a.Date >= date_from) && (a.Accident_Id >= start_from))).ToList();
+                var db = new ecologyWatchEntities1();
+                var temp = db.Accident.Join(db.Accident_Details, 
+                    ac => ac.Accident_Id, 
+                    ad => ad.Accident_Id, 
+                    (ac, ad) => new { Accident = ac, Accident_Details = ad}).
+                    Where(a => ((a.Accident_Details.Accident_Date >= date_from) && (a.Accident.Accident_Id >= start_from))).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Description = temp[i].Accident_Description;
-                    list[i].SituationId = Convert.ToInt32(temp[i].Situation_Id);
-                    list[i].Latitude = Convert.ToDouble(temp[i].Place_Lat);
-                    list[i].Longitude = Convert.ToDouble(temp[i].Place_Long);
-                    list[i].PlaceName = temp[i].Place_Adress;
+                    list[i].Description = temp[i].Accident_Details.Comments;
+                    list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
+                    list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
+                    list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
+                    list[i].PlaceName = temp[i].Accident.Place_Adress;
+                    list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
                 }
 
             }
@@ -113,16 +166,21 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities();
-                List<Accident> temp = db.Accident.OrderByDescending(a => a.Date).Take(10).ToList();
+                var db = new ecologyWatchEntities1();
+                var temp = db.Accident.Join(db.Accident_Details,
+                   ac => ac.Accident_Id,
+                   ad => ad.Accident_Id,
+                   (ac, ad) => new { Accident = ac, Accident_Details = ad })
+                   .OrderByDescending(a => a.Accident_Details.Accident_Date).Take(10).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Description = temp[i].Accident_Description;
-                    list[i].SituationId = Convert.ToInt32(temp[i].Situation_Id);
-                    list[i].Latitude = Convert.ToDouble(temp[i].Place_Lat);
-                    list[i].Longitude = Convert.ToDouble(temp[i].Place_Long);
-                    list[i].PlaceName = temp[i].Place_Adress;
+                    list[i].Description = temp[i].Accident_Details.Comments;
+                    list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
+                    list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
+                    list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
+                    list[i].PlaceName = temp[i].Accident.Place_Adress;
+                    list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
                 }
 
             }
@@ -145,16 +203,18 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities();
-                List<Accident> temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
+                var db = new ecologyWatchEntities1();
+
+                var temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
+
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Description = temp[i].Accident_Description;
                     list[i].SituationId = Convert.ToInt32(temp[i].Situation_Id);
                     list[i].Latitude = Convert.ToDouble(temp[i].Place_Lat);
                     list[i].Longitude = Convert.ToDouble(temp[i].Place_Long);
                     list[i].PlaceName = temp[i].Place_Adress;
                 }
+
             }
             catch { }
 
@@ -166,12 +226,11 @@ namespace EcologyWatcher.Service
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "login")]
         public int LoginUser(User_Data user_data)
         {
-            var temp = new User_Data();
             try
             {
-                var db = new ecologyWatchEntities();
+                var db = new ecologyWatchEntities1();
 
-                temp = db.User_Data.Where(u => ((u.Login == user_data.Login) && (u.Password_Hash == user_data.Password_Hash)));
+                var temp = db.User_Data.Where(u => ((u.Login == user_data.Login) && (u.Password_Hash == user_data.Password_Hash)));
 
                 if (temp != null)
                     return 1;
@@ -192,7 +251,7 @@ namespace EcologyWatcher.Service
             var temp = new User_Data();
             try
             {
-                var db = new ecologyWatchEntities();
+                var db = new ecologyWatchEntities1();
 
                 var list = db.User_Data.Where(u => (u.Login == user_data.Login));
                 if (list == null)

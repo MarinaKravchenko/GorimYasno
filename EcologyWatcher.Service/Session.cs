@@ -12,19 +12,17 @@ namespace EcologyWatcher.Service
     using System;
     using System.Collections.Generic;
     
-    public partial class Actual_Status
+    public partial class Session
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Actual_Status()
-        {
-            this.Accident = new HashSet<Accident>();
-        }
+        public int Session_Id { get; set; }
+        public Nullable<bool> Ok { get; set; }
+        public Nullable<System.DateTime> Last { get; set; }
+        public Nullable<System.DateTime> Started { get; set; }
+        public string Code { get; set; }
+        public Nullable<int> User_Auth_Id { get; set; }
+        public Nullable<int> User_Id { get; set; }
     
-        public int Status_Id { get; set; }
-        public string Status_Name { get; set; }
-        public string Status_Icon { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Accident> Accident { get; set; }
+        public virtual User_Auth User_Auth { get; set; }
+        public virtual User_Data User_Data { get; set; }
     }
 }

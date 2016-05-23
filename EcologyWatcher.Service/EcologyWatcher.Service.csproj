@@ -72,64 +72,79 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Ecology.svc" />
-    <Content Include="EcoWatchModel.Context.tt">
+    <Content Include="EcoModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EcoWatchModel.edmx</DependentUpon>
-      <LastGenOutput>EcoWatchModel.Context.cs</LastGenOutput>
+      <DependentUpon>EcoModel.edmx</DependentUpon>
+      <LastGenOutput>EcoModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="EcoWatchModel.tt">
+    <Content Include="EcoModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EcoWatchModel.edmx</DependentUpon>
-      <LastGenOutput>EcoWatchModel.cs</LastGenOutput>
+      <DependentUpon>EcoModel.edmx</DependentUpon>
+      <LastGenOutput>EcoModel.cs</LastGenOutput>
     </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accident.cs">
-      <DependentUpon>EcoWatchModel.tt</DependentUpon>
+      <DependentUpon>EcoModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Accident_Details.cs">
+      <DependentUpon>EcoModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Actual_Status.cs">
-      <DependentUpon>EcoWatchModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EcoWatchModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EcoWatchModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EcoWatchModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EcoWatchModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EcoWatchModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EcoWatchModel.edmx</DependentUpon>
+      <DependentUpon>EcoModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Message.cs" />
     <Compile Include="Ecology.svc.cs">
       <DependentUpon>Ecology.svc</DependentUpon>
     </Compile>
+    <Compile Include="EcoModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EcoModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EcoModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EcoModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EcoModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EcoModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Picture.cs">
+      <DependentUpon>EcoModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Relation.cs">
+      <DependentUpon>EcoModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Session.cs">
+      <DependentUpon>EcoModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Situation.cs">
-      <DependentUpon>EcoWatchModel.tt</DependentUpon>
+      <DependentUpon>EcoModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User_Auth.cs">
+      <DependentUpon>EcoModel.tt</DependentUpon>
     </Compile>
     <Compile Include="User_Data.cs">
-      <DependentUpon>EcoWatchModel.tt</DependentUpon>
+      <DependentUpon>EcoModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="EcoWatchModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EcoWatchModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="EcoWatchModel.edmx.diagram">
-      <DependentUpon>EcoWatchModel.edmx</DependentUpon>
-    </Content>
     <Content Include="packages.config" />
+    <EntityDeploy Include="EcoModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EcoModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="EcoModel.edmx.diagram">
+      <DependentUpon>EcoModel.edmx</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
