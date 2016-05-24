@@ -95,6 +95,7 @@
       <DependentUpon>EcoModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Message.cs" />
+    <Compile Include="Data\User.cs" />
     <Compile Include="Ecology.svc.cs">
       <DependentUpon>Ecology.svc</DependentUpon>
     </Compile>

@@ -14,11 +14,8 @@ namespace EcologyWatcher.Service
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class Ecology
     {
-        // To use HTTP GET, add [WebGet] attribute. (Default ResponseFormat is WebMessageFormat.Json)
-        // To create an operation that returns XML,
-        //     add [WebGet(ResponseFormat=WebMessageFormat.Xml)],
-        //     and include the following line in the operation body:
-        //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
+        ecologyWatchEntities1 db = new ecologyWatchEntities1();
+
         [OperationContract]
         [WebGet(BodyStyle = WebMessageBodyStyle.Wrapped, ResponseFormat = WebMessageFormat.Json, UriTemplate = "work/{text}")]
         public string DoWork(string text)
@@ -27,7 +24,8 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "addwork")]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json, UriTemplate = "addwork")]
         public int NewMessage(Message message)
         {
             var accident = new Accident();
@@ -35,8 +33,6 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities1();
-
                 accident.Status_Id = 1;
                 accident.User_Id = 1;
                 accident.Situation_Id = message.SituationId;
@@ -50,14 +46,13 @@ namespace EcologyWatcher.Service
                 accident_details.Relation_Id = 1;
                 accident_details.Radius = message.Radius;
 
-
                 db.Accident.Add(accident);
                 db.Accident_Details.Add(accident_details);
                 db.SaveChanges();
             }
             catch
             {
-                return -1;
+                return -2;
 
             }
 
@@ -74,8 +69,6 @@ namespace EcologyWatcher.Service
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews/{id}")]
         public bool AddNews(string id, Message message)
         {
-            var db = new ecologyWatchEntities1();
-
             var minX = message.Latitude - message.Radius / 111.3;
             var maxX = message.Latitude + message.Radius / 111.3;
             var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
@@ -96,7 +89,6 @@ namespace EcologyWatcher.Service
             catch
             {
                 return false;
-
             }
 
             if (accident.Accident_Id > 0)
@@ -114,14 +106,13 @@ namespace EcologyWatcher.Service
         {
             //вижу смысл этого метода, только если пользователь ошибся при внесении данных и хочет их удалить
 
-            var db = new ecologyWatchEntities1();
-
             var accident = new Accident();
 
             try
             {
-                
+                return true;
             }
+            catch { return true; }
         }
 
         [OperationContract]
@@ -133,7 +124,6 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities1();
                 var temp = db.Accident.Join(db.Accident_Details, 
                     ac => ac.Accident_Id, 
                     ad => ad.Accident_Id, 
@@ -166,7 +156,6 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities1();
                 var temp = db.Accident.Join(db.Accident_Details,
                    ac => ac.Accident_Id,
                    ad => ad.Accident_Id,
@@ -203,8 +192,6 @@ namespace EcologyWatcher.Service
 
             try
             {
-                var db = new ecologyWatchEntities1();
-
                 var temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
@@ -224,18 +211,18 @@ namespace EcologyWatcher.Service
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "login")]
-        public int LoginUser(User_Data user_data)
+        public int LoginUser(User user)
         {
             try
             {
-                var db = new ecologyWatchEntities1();
-
-                var temp = db.User_Data.Where(u => ((u.Login == user_data.Login) && (u.Password_Hash == user_data.Password_Hash)));
+                var temp = db.User_Data.Single(u => ((u.Login == user.Login) && (u.Password_Hash == user.Password)));
 
                 if (temp != null)
+                {
+                    User_Data currentUser = temp;
                     return 1;
-                else
-                    return -1;
+                }
+                else return -1;
             }
             catch
             {
@@ -251,8 +238,6 @@ namespace EcologyWatcher.Service
             var temp = new User_Data();
             try
             {
-                var db = new ecologyWatchEntities1();
-
                 var list = db.User_Data.Where(u => (u.Login == user_data.Login));
                 if (list == null)
                 {

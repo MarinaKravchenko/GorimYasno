@@ -21,5 +21,7 @@ namespace EcologyWatcher.Service.Data
         public string PlaceName { get; set; }
         [DataMember]
         public double Radius { get; set; }
+        //[DataMember]
+       // public byte[] Picture { get; set; }
     }
 }

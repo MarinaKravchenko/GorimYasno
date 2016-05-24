@@ -7,50 +7,32 @@
 
     document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
 
-    var buttonsDiv;
-    var loginDiv;
-    var newUserDiv;
+    var startDiv = document.getElementById('startDiv');
+    var signInDiv = document.getElementById('signInDiv');
+    var signUpDiv = document.getElementById('signUpDiv');
+    var buttonsDiv = document.getElementById('buttonsDiv');
+    var newMessageDiv = document.getElementById('newMessageDiv');
+    var answerDiv = document.getElementById('answerDiv');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv];
     var description;
     var situations;
-    var newMessageDiv;
     var btn_get_coords;
     var address;
 
     function onDeviceReady() {
-        // Handle the Cordova pause and resume events
-        document.addEventListener('pause', onPause.bind( this ), false );
-        document.addEventListener('resume', onResume.bind( this ), false );
-        document.getElementById('btn_get_coords').addEventListener('click', replyClick, false);
-        document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
-        document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-        document.getElementById('btn_login').addEventListener('click', loginUser, false);
 
+        document.getElementById('btn_sign_in').addEventListener('click', signInClick, false);
+        document.getElementById('btn_sign_up').addEventListener('click', signUpClick, false);
+
+      //  document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
+      //  document.getElementById('btn_back1').addEventListener('click', goBack, false);
     };
 
-    //function pageChange() {
-    //    window.location = 'NewMessage.html';
-    //  //  window.focus = 'NewMessage.html';
-    //    var list = ['Fire', 'Flood', 'Smoke'];
-    //    var select = document.getElementById('situations');
-    //    var options = select.options;
-
-    //    for (var i = 0; i < list.length; i++) {
-    //        var opt = document.createElement('option');
-    //        opt.value = list[i];
-    //        opt.innerHTML = list[i];
-    //        select.appendChild(opt);
-    //    }
-    //}
-
     function messagePost() {
+        showDiv(newMessageDiv);
 
-        newMessageDiv = document.getElementById('newMessageDiv');
-        buttonsDiv = document.getElementById('buttonsDiv');
-        newMessageDiv.hidden = false;
-        buttonsDiv.hidden = true;
-
-        document.getElementByValue('GPS').addEventListener('check', locationByAddress, false);
-        document.getElementById('btn_send_ready_message').addEventListener('click', sendMessage, false);
+      //  document.getElementByValue('GPS').addEventListener('check', locationByAddress, false);
+      //  document.getElementById('btn_send_ready_message').addEventListener('click', sendMessage, false);
     }
 
     function locationByAddress() {
@@ -61,14 +43,15 @@
     }
 
     function sendMessage(){
-        
-
+       
+        var temp = document.getElementById('situations');
         send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
-            Description: document.getElementById('description').value,
-            SituationId: document.getElementById('situations').value,
+            Description: "lala",//document.getElementById('description').value,
+            SituationId: 1, //temp.options[temp.selectedIndex].text,
             Longitude: "55",
             Latitude: "35",
-            PlaceName: "Moscow"
+            PlaceName: "Moscow",
+            Radius: 5.2
         }), function (x) {
             var div = document.getElementById('answerDiv');
             div.innerHTML = x;
@@ -126,14 +109,6 @@
         return xmlHttp;
     }
 
-    function onPause() {
-        // TODO: This application has been suspended. Save application state here.
-    };
-
-    function onResume() {
-        // TODO: This application has been reactivated. Restore application state here.
-    };
-
     function replyClick() {
         navigator.geolocation.getCurrentPosition(onSuccess);
     }
@@ -143,42 +118,40 @@
         div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
 
-    function loginUser() {
+    function signInClick() {
 
-        buttonsDiv = document.getElementById('buttonsDiv');
-        loginDiv = document.getElementById('loginDiv');
-        buttonsDiv.hidden = true;
-        loginDiv.hidden = false;
+        showDiv(signInDiv);
 
-        document.getElementById('btn_sign_up').addEventListener('click', signUp, false);
-        document.getElementById('btn_create_new_user').addEventListener('click', createNewUser, false);
-        document.getElementById('btn_back').addEventListener('click', goBack, false);
+        document.getElementById('btn_submit_sign_in').addEventListener('click', signIn, false);
+        document.getElementById('btn_back_from_sign_in').addEventListener('click', sendMessage, false);
     }
 
-    function signUp() {
+    function signIn() {
 
         send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
             Login: document.getElementById('login').value,
-            Password_Hash: document.getElementById('password').value
+            Password: document.getElementById('password').value
         }), function (x) {
-            var div = document.getElementById('answerDiv');
-            div.innerHTML = x;
+            answerDiv.innerHTML = x;
+            alert(x);
         })
     }
 
-    function createNewUser()
+    function signUpClick()
     {
-        loginDiv = document.getElementById('loginDiv');
-        newUserDiv = document.getElementById('newUserDiv');
-        loginDiv.hidden = true;
-        newUserDiv.hidden = false;
+        showDiv(buttonsDiv);
+        document.getElementById('btn_get_coords').addEventListener('click', replyClick, false);
+        document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
+        document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
+        document.getElementById('btn_about_place').addEventListener('click', aboutPlaceClick, false);
+        document.getElementById('btn_history').addEventListener('click', historyClick, false);
 
-        document.getElementById('btn_sign_up_new').addEventListener('click', signNewUser, false);
-        document.getElementById('btn_back').addEventListener('click', goBack, false);
+       // document.getElementById('btn_sign_up_new').addEventListener('click', signNewUser, false);
+       // document.getElementById('btn_back').addEventListener('click', goBack, false);
 
     }
 
-    function signNewUser() {
+    function signUp() {
 
         send('http://localhost:56989/Ecology.svc/create', 'POST', JSON.stringify({
             Login: document.getElementById('login_new').value,
@@ -191,8 +164,16 @@
     }
 
     function goBack(){
-        buttonsDiv = document.getElementById('buttonsDiv');
-        buttonsDiv.hidden = false;
+        showDiv(startDiv);
+    }
+
+    function showDiv(visibleDivName) {
+        visibleDivName.hidden = false;
+        for (var i = 0; i < allDivs.length; i++) {
+            if (visibleDivName != allDivs[i]) {
+                allDivs[i].hidden = true;
+            }
+        }
     }
     
 } )();

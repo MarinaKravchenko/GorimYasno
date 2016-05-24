@@ -14,40 +14,50 @@
 
 </head>
 <body>
-    <p>Hello!</p>
-    <div id="buttonsDiv">
+    <h3>Ecology Watcher</h3>
+    
+    <div id="startDiv">
         <p>
-            <button type="button" id="btn_get_coords">Get coordinates</button> <br />
-            <button type="button" id="btn_get_message">Get message</button> <br />
-            <button type="button" id="btn_post_message">Post message</button> <br />
-            <button type="button" id="btn_login">Login</button>
+            Nice to see you! <br />
+            <button id="btn_sign_in">Sign in</button>
+            <button id="btn_sign_up">Sign up</button>
         </p>
     </div>
 
-    <div id="answerDiv"></div>
-
-    <div id="loginDiv" hidden="hidden">
-        <p>
-             Login: <br />
-             <input type="text" id="login" /><br />
-             Password: <br />
-             <input type="password" id="password" /><br />
-             <button type="button" id="btn_sign_up">Sign up</button>
-             <button type="button" id="btn_create_new_user">New User</button>
-             <button type="button" id="btn_back">Back</button>
-       </p>
-    </div>
-
-    <div id="newUserDiv" hidden="hidden">
+    <div id="signInDiv" hidden="hidden">
         <p>
             Login: <br />
-            <input type="text" id="login_new" /><br />
+            <input id="login" /><br />
+            Password: <br />
+            <input type="password" id="password" /><br />
+            <button type="submit" id="btn_submit_sign_in">Sign in</button>
+            <button id="btn_back_from_sign_in">Back</button>
+        </p>
+    </div>
+
+    <div id="signUpDiv" hidden="hidden">
+        <p>
+            Login: <br />
+            <input id="login_new" /><br />
             Password: <br />
             <input type="password" id="password_new" /><br />
             E-mail: <br />
-            <input type="text" id="email_new" /><br />
-            <button type="button" id="btn_sign_up_new">Sign up</button>
-            <button type="button" id="btn_back">Back</button>
+            <input type="email" id="email_new" /><br />
+            <button type="submit" id="btn_submit_sign_up">Sign up</button>
+            <button id="btn_back_from_sign_up">Back</button>
+        </p>
+    </div>
+
+    <div id="buttonsDiv" hidden ="hidden">
+        <p>            
+            Choose option:<br /><br />
+            <button id="btn_post_message">New message</button><br />
+            <button id="btn_about_place">Place actual info</button><br />
+            <button id="btn_history">Place history</button><br />
+
+            Tests: <br />
+            <button id="btn_get_coords">Get coordinates</button> <br />
+            <button id="btn_get_message">Get message</button> <br />
         </p>
     </div>
 
@@ -69,10 +79,12 @@
             <button type="button" id="btn_get_coords">Get coordinates</button><br />
             <input type="radio" name="rad_btn_location" value="address">Enter adress:<br />
             <input id="address" disabled ="disabled"/> <br/>
-            <button type="button" id="btn_send_ready_message">Post</button>
-            <button type="button" id="btn_back">Back</button>
+            <button type="submit" id="btn_submit">Post</button>
+            <button type="button" id="btn_back1">Back</button>
         </p>
     </div>
+
+    <div id="answerDiv"></div>
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
