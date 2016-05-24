@@ -116,7 +116,7 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
         public List<Message> Search(string text, DateTime date_from, int start_from)
         {
@@ -180,7 +180,7 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchgeo")]
         public List<Message> SearchGeo(string text, double position_lat, double position_long, double radius)
         {

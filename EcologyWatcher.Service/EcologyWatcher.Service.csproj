@@ -146,6 +146,7 @@
     <Content Include="EcoModel.edmx.diagram">
       <DependentUpon>EcoModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\Ecology.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

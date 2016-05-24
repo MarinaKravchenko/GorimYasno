@@ -51,7 +51,7 @@
             Longitude: "55",
             Latitude: "35",
             PlaceName: "Moscow",
-            Radius: 5.2
+            Radius: 5
         }), function (x) {
             var div = document.getElementById('answerDiv');
             div.innerHTML = x;
