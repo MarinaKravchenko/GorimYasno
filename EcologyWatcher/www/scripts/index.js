@@ -17,40 +17,64 @@
     var description;
     var situations;
     var btn_get_coords;
-    var address;
+    var addressInput = document.getElementById('addressInput');
+
+    var user;
+    var coordinates;
 
     function onDeviceReady() {
 
         document.getElementById('btn_sign_in').addEventListener('click', signInClick, false);
         document.getElementById('btn_sign_up').addEventListener('click', signUpClick, false);
-
-      //  document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
-      //  document.getElementById('btn_back1').addEventListener('click', goBack, false);
     };
 
     function messagePost() {
         showDiv(newMessageDiv);
 
-      //  document.getElementByValue('GPS').addEventListener('check', locationByAddress, false);
-      //  document.getElementById('btn_send_ready_message').addEventListener('click', sendMessage, false);
+        document.getElementByValue('GPS').addEventListener('selectionchange', selectGpsOrAddress, false);
+        document.getElementByValue('address').addEventListener('selectionchange', selectGpsOrAddress, false);
+        document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
     }
 
-    function locationByAddress() {
-       address = document.getElementById('address');
-       address.setEnabled(true);
-       btn_get_coords = document.getElementById('btn_get_coords');
-       btn_get_coords.setEnabled(false);
+    function selectGpsOrAddress() {
+        if( document.getElementById('rad_btn_location').selectedIndex == 1 ) {
+            addressInput.disabled = false;
+        }
+        else {
+            addressInput.disabled = true;
+        }
+    }
+
+    function locationByAddress(adress) {       
+       var xmlhttp = getXmlHttp();
+       var adress = 'Moscow,+Kulakova,+15';
+       var request = 'https://maps.googleapis.com/maps/api/geocode/json?address='+adress+'&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
+       xmlhttp.open('GET', request, true);
+       xmlhttp.onreadystatechange = function () {
+           if (xmlhttp.readyState == 4) {
+               if (xmlhttp.status == 200) {
+                   var obj = JSON.parse(xmlhttp.responseText);
+                   var div = document.getElementById('answerDiv');
+                   div.innerHTML = 'Latitude: ' + obj.results[0].geometry.location.lat + '<br/>'
+                       + 'Longitude: ' + obj.results[0].geometry.location.lng;
+               }
+           }
+       };
+       xmlhttp.send(null);
     }
 
     function sendMessage(){
-       
+        var place = '';
+        if (true) {
+    
+        }
         var temp = document.getElementById('situations');
-        send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
-            Description: "lala",//document.getElementById('description').value,
-            SituationId: 1, //temp.options[temp.selectedIndex].text,
-            Longitude: "55",
-            Latitude: "35",
-            PlaceName: "Moscow",
+        send('https://eco.cyrilmarten.com/Ecology.svc/addwork', 'POST', JSON.stringify({
+            Description: document.getElementById('description').value,
+            SituationId: temp.options[temp.selectedIndex].text,
+            Longitude: coordinates[0],
+            Latitude: coordinates[1],
+            PlaceName: place,
             Radius: 5.2
         }), function (x) {
             var div = document.getElementById('answerDiv');
@@ -82,19 +106,18 @@
         xmlHttp.send(data);
     }
 
-    function messageGet() {
-        var xmlhttp = getXmlHttp();
-        xmlhttp.open('GET', 'http://localhost:56989/Ecology.svc/work/Hello!', true);
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4) {
-                if (xmlhttp.status == 200) {
-                    var div = document.getElementById('answerDiv');
-                    div.innerHTML = xmlhttp.responseText;
-                }
-            }
-        };
-        xmlhttp.send(null);
-    }
+  //  function messageGet() {
+  //      var xmlhttp = getXmlHttp();
+  //      xmlhttp.open('GET', 'https://eco.cyrilmarten.com/Ecology.svc/work/Hello!', true);
+  //      xmlhttp.onreadystatechange = function () {
+  //          if (xmlhttp.readyState == 4) {
+  //              if (xmlhttp.status == 200) {
+  //                  answerDiv.innerHTML = xmlhttp.responseText;
+  //              }
+  //          }
+  //      };x
+  //      xmlhttp.send(null);
+  //  }
 
     function getXmlHttp() {
         var xmlHttp;
@@ -109,31 +132,35 @@
         return xmlHttp;
     }
 
-    function replyClick() {
+    function getPosition() {
         navigator.geolocation.getCurrentPosition(onSuccess);
     }
 
     function onSuccess(position) {
-        var div = document.getElementById('answerDiv');
-        div.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
+        coordinates = [position.coords.latitude, position.coords.longitude];
+        answerDiv.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
 
     function signInClick() {
-
         showDiv(signInDiv);
 
         document.getElementById('btn_submit_sign_in').addEventListener('click', signIn, false);
-        document.getElementById('btn_back_from_sign_in').addEventListener('click', sendMessage, false);
+        document.getElementById('btn_back_from_sign_in').addEventListener('click', locationByAddress, false);
     }
 
     function signIn() {
 
-        send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
+        send('https://eco.cyrilmarten.com/Ecology.svc/login', 'POST', JSON.stringify({
             Login: document.getElementById('login').value,
             Password: document.getElementById('password').value
         }), function (x) {
             answerDiv.innerHTML = x;
-            alert(x);
+            if (x == '{"LoginUserResult":1}') {
+                user = document.getElementById('login').value;
+                answerDiv.innerHTML = 'Welcome, ' + user;
+                showDiv(buttonsDiv);
+                document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
+            }
         })
     }
 
@@ -147,7 +174,7 @@
         document.getElementById('btn_history').addEventListener('click', historyClick, false);
 
        // document.getElementById('btn_sign_up_new').addEventListener('click', signNewUser, false);
-       // document.getElementById('btn_back').addEventListener('click', goBack, false);
+        document.getElementById('btn_back').addEventListener('click', goBack, false);
 
     }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace EcologyWatcher.Service.Data
+namespace EcologyWatcher.Service.DTO
 {
     [DataContract]
     public class Message

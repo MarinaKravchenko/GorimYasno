@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,11 +8,10 @@ using System.Web;
 namespace EcologyWatcher.Service.DTO
 {
     [DataContract]
-    public class User
+    public class Geometry
     {
         [DataMember]
-        public string Login { get; set; }
-        [DataMember]
-        public string Password { get; set; }
+        [JsonProperty("geometry")]
+        public Location Loc { get; set; }
     }
 }
