@@ -1,4 +1,5 @@
-﻿using EcologyWatcher.Service.DTO;
+﻿using EcologyWatcher.Service.Data;
+using EcologyWatcher.Service.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace EcologyWatcher.Service
     public class Ecology
     {
         ecologyWatchEntities1 db = new ecologyWatchEntities1();
+        User_Data currentUser = new User_Data();
 
         [OperationContract]
         [WebGet(BodyStyle = WebMessageBodyStyle.Wrapped, ResponseFormat = WebMessageFormat.Json, UriTemplate = "work/{text}")]
@@ -215,53 +217,47 @@ namespace EcologyWatcher.Service
         {
             try
             {
-                var temp = db.User_Data.Single(u => ((u.Login == user.Login) && (u.Password_Hash == user.Password)));
-
-                if (temp != null)
-                {
-                    User_Data currentUser = temp;
-                    return 1;
-                }
-                else return -1;
+                currentUser = db.User_Data.Single(u => ((u.Login == user.Login) && (u.Password_Hash == user.Password)));
+                return 1;
             }
-            catch
+            catch 
             {
-                return -2;
+                return -1;
             }
         }
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "create")]
-        public int CreateNewnUser(User_Data user_data)
+        public int CreateNewUser(NewUser user_data)
         {
-            var temp = new User_Data();
             try
             {
-                var list = db.User_Data.Where(u => (u.Login == user_data.Login));
+                var temp = new User_Data();
+                List<User_Data> list = (db.User_Data.Where(u => (u.Login == user_data.Login))).ToList();
                 if (list == null)
                 {
                     temp.Login = user_data.Login;
-                    temp.Password_Hash = user_data.Password_Hash;
+                    temp.Password_Hash = user_data.Password;
                     temp.Email = user_data.Email;
                     temp.Is_Active = true;
                     temp.Joined_On = DateTime.Now;
+                    try
+                    {
+                        db.User_Data.Add(temp);
+                        db.SaveChanges();
+                    }
+                    catch { return -1; }
 
-                    db.User_Data.Add(temp);
-                    db.SaveChanges();
+                    currentUser = temp;
+                    return temp.User_Id;
                 }
+                else return -2;
             }
             catch
             {
-                return -1;
+                return -3;
             }
-
-            if (temp.User_Id > 0)
-            {
-                return temp.User_Id;
-            }
-
-            return -1;
         }   
     }
 }

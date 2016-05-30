@@ -29,8 +29,10 @@
     };
 
     function messagePost() {
+        answerDiv.innerHTML = '';
         showDiv(newMessageDiv);
 
+        // fix radio buttons
         document.getElementByValue('GPS').addEventListener('selectionchange', selectGpsOrAddress, false);
         document.getElementByValue('address').addEventListener('selectionchange', selectGpsOrAddress, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
@@ -82,7 +84,7 @@
         })
     }
 
-    function send(url, method, data, callback) {
+    function send(rejectUnauthorized, url, method, data, callback) {
         var xmlHttp = getXmlHttp();
         xmlHttp.onreadystatechange = function () {
             if (xmlHttp.readyState == 4) {
@@ -149,49 +151,42 @@
     }
 
     function signIn() {
-
         send('https://eco.cyrilmarten.com/Ecology.svc/login', 'POST', JSON.stringify({
             Login: document.getElementById('login').value,
             Password: document.getElementById('password').value
         }), function (x) {
-            answerDiv.innerHTML = x;
             if (x == '{"LoginUserResult":1}') {
                 user = document.getElementById('login').value;
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
                 document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
+                //document.getElementById('btn_about_place').addEventListener('click', ?, false);
+                //document.getElementById('btn_history').addEventListener('click', ?, false);
+            } else {
+                if (x == '{"LoginUserResult":-1}') {
+                    answerDiv.innerHTML = 'Sorry, you are not registred.';
+                } else {
+                    answerDiv.innerHTML = 'Error.';
+                }
             }
         })
     }
 
     function signUpClick()
     {
-        showDiv(buttonsDiv);
-        document.getElementById('btn_get_coords').addEventListener('click', replyClick, false);
-        document.getElementById('btn_get_message').addEventListener('click', messageGet, false);
-        document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-        document.getElementById('btn_about_place').addEventListener('click', aboutPlaceClick, false);
-        document.getElementById('btn_history').addEventListener('click', historyClick, false);
-
-       // document.getElementById('btn_sign_up_new').addEventListener('click', signNewUser, false);
-        document.getElementById('btn_back').addEventListener('click', goBack, false);
-
+        showDiv(signUpDiv);
+        document.getElementById('btn_submit_sign_up').addEventListener('click', signUp, false);
     }
 
     function signUp() {
 
-        send('http://localhost:56989/Ecology.svc/create', 'POST', JSON.stringify({
+        send(false, 'https://localhost:44369/Ecology.svc/create', 'POST', JSON.stringify({
             Login: document.getElementById('login_new').value,
-            Password_Hash: document.getElementById('password_new').value,
+            Password: document.getElementById('password_new').value,
             Email: document.getElementById('email_new').value
         }), function (x) {
-            var div = document.getElementById('answerDiv');
-            div.innerHTML = x;
+            answerDiv.innerHTML = x;
         })
-    }
-
-    function goBack(){
-        showDiv(startDiv);
     }
 
     function showDiv(visibleDivName) {
