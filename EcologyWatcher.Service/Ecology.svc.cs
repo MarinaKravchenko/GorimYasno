@@ -36,21 +36,25 @@ namespace EcologyWatcher.Service
             try
             {
                 accident.Status_Id = 1;
-                accident.User_Id = 1;
-                accident.Situation_Id = message.SituationId;
+                accident.User_Id = 8;
+                accident.Situation_Id = message.SituationId + 1;
                 accident.Place_Lat = message.Latitude;
                 accident.Place_Long = message.Longitude;
                 accident.Place_Adress = message.PlaceName;
+                db.Accident.Add(accident);
 
+                accident_details.Accident_Id = db.Accident.Count();
                 accident_details.Accident_Date = DateTime.Now;
                 accident_details.Comments = message.Description;
-                accident_details.Accident_Id = accident.Accident_Id; //??
                 accident_details.Relation_Id = 1;
                 accident_details.Radius = message.Radius;
-
-                db.Accident.Add(accident);
                 db.Accident_Details.Add(accident_details);
-                db.SaveChanges();
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch { return -4; }
             }
             catch
             {
@@ -63,7 +67,7 @@ namespace EcologyWatcher.Service
                 return accident.Accident_Id;
             }
 
-            return -1;
+            return -3;
         }
 
         [OperationContract]
@@ -235,7 +239,7 @@ namespace EcologyWatcher.Service
             {
                 var temp = new User_Data();
                 List<User_Data> list = (db.User_Data.Where(u => (u.Login == user_data.Login))).ToList();
-                if (list == null)
+                if (list.Count == 0)
                 {
                     temp.Login = user_data.Login;
                     temp.Password_Hash = user_data.Password;
