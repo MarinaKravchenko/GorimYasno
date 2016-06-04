@@ -21,9 +21,9 @@
     var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer];
     var addressInput = document.getElementById('addressInput');
     
-    var situation;
+    var situations = document.getElementById('situations');
     var user;
-    var coordinates;
+    var coordinates = [55, 35];
 
     function onDeviceReady() {
 
@@ -36,8 +36,11 @@
         showDiv(newMessageDiv);
 
         // fix radio buttons
-        document.getElementByValue('GPS').addEventListener('selectionchange', selectGpsOrAddress, false);
-        document.getElementByValue('address').addEventListener('selectionchange', selectGpsOrAddress, false);
+        // for (var i = 0; i < document.getElementsByName('rad_btn_location').length; i++) {
+        //document.getElementsByName('rad_btn_location')[i].addEventListener('', selectGpsOrAddress, false);
+        //  }
+        //document.getElementByValue('GPS').addEventListener('selectionchange', selectGpsOrAddress, false);
+        //document.getElementByValue('address').addEventListener('selectionchange', selectGpsOrAddress, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
     }
 
@@ -62,6 +65,7 @@
                    var div = document.getElementById('answerDiv');
                    div.innerHTML = 'Latitude: ' + obj.results[0].geometry.location.lat + '<br/>'
                        + 'Longitude: ' + obj.results[0].geometry.location.lng;
+                   coordinates = [obj.results[0].geometry.location.lng, obj.results[0].geometry.location.lat];
                }
            }
        };
@@ -70,20 +74,16 @@
 
     function sendMessage(){
         var place = '';
-        if (true) {
-    
-        }
         var temp = document.getElementById('situations');
         send('https://eco.cyrilmarten.com/Ecology.svc/addwork', 'POST', JSON.stringify({
             Description: document.getElementById('description').value,
-            SituationId: temp.options[temp.selectedIndex].text,
+            SituationId: situations.selectedIndex,
             Longitude: coordinates[0],
             Latitude: coordinates[1],
             PlaceName: place,
-            Radius: 5.2
+            Radius: document.getElementById('radius').value
         }), function (x) {
-            var div = document.getElementById('answerDiv');
-            div.innerHTML = x;
+            answerDiv.innerHTML = x;
         })
     }
 
@@ -181,14 +181,27 @@
     }
 
     function signUp() {
-
-        send('https://eco.cyrilmarten.com/Ecology.svc/create', 'POST', JSON.stringify({
-            Login: document.getElementById('login_new').value,
-            Password: document.getElementById('password_new').value,
-            Email: document.getElementById('email_new').value
-        }), function (x) {
-            answerDiv.innerHTML = x;
-        })
+        if (document.getElementById('login_new').value != '' && document.getElementById('password_new').value != '' &&
+            document.getElementById('email_new').value != '') {
+            send('https://eco.cyrilmarten.com/Ecology.svc/create', 'POST', JSON.stringify({
+                Login: document.getElementById('login_new').value,
+                Password: document.getElementById('password_new').value,
+                Email: document.getElementById('email_new').value
+            }), function (x) {
+                if (x == '{"CreateNewUserResult":-2}') {
+                    answerDiv.innerHTML = 'Sorry, this login already exists.';
+                }
+                else if (x != '{"CreateNewUserResult":-1}' && x != '{"CreateNewUserResult":-2}' && x != '{"CreateNewUserResult":-3}') {
+                    user = document.getElementById('login_new').value;
+                    answerDiv.innerHTML = 'Welcome, ' + user;
+                    showDiv(buttonsDiv);
+                    document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
+                    //document.getElementById('btn_settings').addEventListener('click', )
+                }
+                else answerDiv.innerHTML = 'Sorry, some troubles occured.';
+            })
+        }
+        else answerDiv.innerHTML = 'Please, fill in all fields.';
     }
 
     function showDiv(visibleDivName) {
