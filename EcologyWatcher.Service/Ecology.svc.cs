@@ -120,7 +120,7 @@ namespace EcologyWatcher.Service
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
-        public List<Message> Search(string text, DateTime date_from, int start_from)
+        public List<Message> Search (DateTime date_from, int start_from)
         {
             List<Message> list = new List<Message>();
 
@@ -130,7 +130,7 @@ namespace EcologyWatcher.Service
                     ac => ac.Accident_Id, 
                     ad => ad.Accident_Id, 
                     (ac, ad) => new { Accident = ac, Accident_Details = ad}).
-                    Where(a => ((a.Accident_Details.Accident_Date >= date_from) && (a.Accident.Accident_Id >= start_from))).ToList();
+                    Where(a => ((a.Accident_Details.Accident_Date == date_from) && (a.Accident.Accident_Id >= start_from))).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
@@ -145,14 +145,15 @@ namespace EcologyWatcher.Service
             }
             catch
             {
+                return null;
             }
             return list;
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
-            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchlast10")]
-        public List<Message> Search10(string text)
+        [WebGet(BodyStyle = WebMessageBodyStyle.WrappedResponse,
+            ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchlast10")]
+        public List<Message> Search10()
         {
             List<Message> list = new List<Message>();
 
@@ -177,6 +178,7 @@ namespace EcologyWatcher.Service
             }
             catch
             {
+                return null;
             }
             return list;
         }

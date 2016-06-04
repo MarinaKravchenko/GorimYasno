@@ -50,8 +50,6 @@
         <p>            
             Choose option:<br /><br />
             <button id="btn_post_message">New message</button><br />
-            <button id="btn_about_place">Place actual info</button><br />
-            <button id="btn_history">Place history</button><br />
             <button id="btn_search">Search info</button><br />
         </p>
     </div>
@@ -79,26 +77,42 @@
 
     <div id="answerDiv"></div>
 
-    <!-- Cordova reference, this is added to your app when it's built. -->
-    <script src="cordova.js"></script>
-    <script src="scripts/platformOverrides.js"></script>
-    <script src="scripts/index.js"></script>
-    
     <div id="searchDiv" hidden="hidden">
         <p>
-            Choose option:<br /><br />
+            Please, choose option:<br /><br />
             <button id="btn_search_by_time_click">Search by time</button><br />
             <button id="btn_search_by_geoposition_click">Search by geoposition</button><br />
             <button id="btn_search_last_ten_click">Search last ten</button><br />
         </p>
     </div>
+    <div id="search_last_10"></div>
 
     <div id="search_by_time_div" hidden="hidden">
         <p>
              Please, input time <br />
             <input type="date" id="search_time" /><br />
-            <button id="btn_search_last_ten">Search</button><br />
+            <button id="btn_search_by_time">Search</button><br />
+        </p>
+    </div>    
+    <div id="search_by_time_div_answer" hidden="hidden"></div>
+    
+    <div id="search_by_geoposition_div" hidden="hidden">
+        <p>
+             Please, input address <br />
+            <input  id="address_search_input" /><br />
+            <button id="btn_search_by_geoposition">Search</button><br />
         </p>
     </div>
+    <div id="search_by_time_div_answer" hidden="hidden">
+        <input type="radio" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
+        <input type="radio" name="rad_btn_location" value="address">Enter adress:<br />
+        <input id="addressInput" disabled="disabled" /> <br />
+    </div>
+
+    <!-- Cordova reference, this is added to your app when it's built. -->
+    <script src="cordova.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+    <script src="scripts/index.js"></script>
+
 </body>
 </html>

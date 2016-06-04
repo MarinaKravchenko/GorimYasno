@@ -13,14 +13,15 @@
     var buttonsDiv = document.getElementById('buttonsDiv');
     var newMessageDiv = document.getElementById('newMessageDiv');
     var answerDiv = document.getElementById('answerDiv');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv];
-    var description;
-    var situations;
-    var btn_get_coords;
-    var addressInput = document.getElementById('addressInput');
     var searchDiv = document.getElementById('searchDiv');
     var search_by_time_div = document.getElementById('search_by_time_div');
-
+    var search_last_10 = document.getElementById('search_last_10');
+    var search_by_time_div_answer = document.getElementById('search_by_time_div_answer');
+    var search_by_geoposition_div = document.getElementById('search_by_geoposition_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer];
+    var addressInput = document.getElementById('addressInput');
+    
+    var situation;
     var user;
     var coordinates;
 
@@ -86,7 +87,7 @@
         })
     }
 
-    function send(rejectUnauthorized, url, method, data, callback) {
+    function send(url, method, data, callback) {
         var xmlHttp = getXmlHttp();
         xmlHttp.onreadystatechange = function () {
             if (xmlHttp.readyState == 4) {
@@ -162,9 +163,7 @@
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
                 document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-                //document.getElementById('btn_about_place').addEventListener('click', ?, false);
-                //document.getElementById('btn_history').addEventListener('click', ?, false);
-                //document.getElementById('btn_search').addEventListener('click', search, false);
+                document.getElementById('btn_search').addEventListener('click', search, false);
             } else {
                 if (x == '{"LoginUserResult":-1}') {
                     answerDiv.innerHTML = 'Sorry, you are not registred.';
@@ -183,7 +182,7 @@
 
     function signUp() {
 
-        send(false, 'https://localhost:44369/Ecology.svc/create', 'POST', JSON.stringify({
+        send('https://eco.cyrilmarten.com/Ecology.svc/create', 'POST', JSON.stringify({
             Login: document.getElementById('login_new').value,
             Password: document.getElementById('password_new').value,
             Email: document.getElementById('email_new').value
@@ -201,33 +200,48 @@
         }
     }
     
-    function search(){
+    function search() {
         showDiv(searchDiv);
-        //document.getElementById('btn_search_by_time_click').addEventListener('click', search_by_time_click, false);
-        //document.getElementById('btn_search_by_geoposition_click').addEventListener('click', search_by_geoposition_click, false);
+        document.getElementById('btn_search_by_time_click').addEventListener('click', search_by_time_click, false);
+        document.getElementById('btn_search_by_geoposition_click').addEventListener('click', search_by_geoposition_click, false);
         document.getElementById('btn_search_last_ten_click').addEventListener('click', search_last_ten_click, false);
     }
+
     function search_last_ten_click() {
+        searchDiv.hidden = true;
         var xmlhttp = getXmlHttp();
-        xmlhttp.open('GET', 'https://eco.cyrilmarten.com/Ecology.svc/searchlast10"', true);
+        xmlhttp.open('GET', 'https://eco.cyrilmarten.com/Ecology.svc/searchlast10', true);
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
-                    answerDiv.innerHTML = xmlhttp.responseText;
+                    alert('COOL');
+                    search_last_10.innerHTML = xmlhttp.responseText;
                 }
             }
         }; x
         xmlhttp.send(null);
+        showDiv(search_last_10);
     }
     function search_by_time_click() {
         showDiv(search_by_time_div);
         document.getElementById('btn_search_by_time').addEventListener('click', search_by_time, false);
     }
     function search_by_time(){
-        send(false, 'https://localhost:44369/Ecology.svc/search', 'POST', JSON.stringify({
-            
+        send('https://eco.cyrilmarten.com/Ecology.svc/search', 'POST', JSON.stringify({
+            Accident_Date: Date(document.getElementById('search_time').value),
+            Accident_Id: 1
         }), function (x) {
-            answerDiv.innerHTML = x;
+            search_by_time_div_answer.innerHTML = x;
         })
+        showDiv(search_by_time_div_answer);
+    }
+
+    function search_by_geoposition_click() {
+        showDiv(search_by_geoposition_div);
+        document.getElementById('btn_search_by_geoposition').addEventListener('click', search_by_geoposition, false);
+    }
+    function search_by_geoposition() {
+
+
     }
 } )();
