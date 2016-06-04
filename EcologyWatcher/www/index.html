@@ -51,6 +51,7 @@
             Choose option:<br /><br />
             <button id="btn_post_message">New message</button><br />
             <button id="btn_search">Search info</button><br />
+            <button id="btn_settings">Settings</button><br />
         </p>
     </div>
 
@@ -64,12 +65,14 @@
                 <option value="Other">Rubbish</option>
                 <option value="Other">Oil spill</option>
             </select><br />
+            Approximate radius (metres): <br />
+            <input id="radius" /> <br />
             Describe it:<br />
             <input id="description" /><br />
             When did it happen? <br />
             <input type="date" id="date" /><br />
-            <input type="radio" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
-            <input type="radio" name="rad_btn_location" value="address">Enter adress:<br />
+            <input type="radio" id="rad1" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
+            <input type="radio" id="rad2" name="rad_btn_location" value="address">Enter adress:<br />
             <input id="addressInput" disabled ="disabled"/> <br/>
             <button type="submit" id="btn_submit">Post</button>
         </p>
