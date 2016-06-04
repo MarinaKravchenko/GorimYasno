@@ -52,6 +52,7 @@
             <button id="btn_post_message">New message</button><br />
             <button id="btn_about_place">Place actual info</button><br />
             <button id="btn_history">Place history</button><br />
+            <button id="btn_search">Search info</button><br />
         </p>
     </div>
 
@@ -83,5 +84,21 @@
     <script src="scripts/platformOverrides.js"></script>
     <script src="scripts/index.js"></script>
     
+    <div id="searchDiv" hidden="hidden">
+        <p>
+            Choose option:<br /><br />
+            <button id="btn_search_by_time_click">Search by time</button><br />
+            <button id="btn_search_by_geoposition_click">Search by geoposition</button><br />
+            <button id="btn_search_last_ten_click">Search last ten</button><br />
+        </p>
+    </div>
+
+    <div id="search_by_time_div" hidden="hidden">
+        <p>
+             Please, input time <br />
+            <input type="date" id="search_time" /><br />
+            <button id="btn_search_last_ten">Search</button><br />
+        </p>
+    </div>
 </body>
 </html>
