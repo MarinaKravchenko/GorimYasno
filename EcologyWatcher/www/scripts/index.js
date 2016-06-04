@@ -31,32 +31,51 @@
         document.getElementById('btn_sign_up').addEventListener('click', signUpClick, false);
     };
 
+    function addressPredict() {
+        var input = document.getElementById('addressInput').value;
+        var xmlhttp = getXmlHttp();
+        var request = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + input +
+            '&types=address&language=en&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
+        xmlhttp.open('GET', request, true);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    var obj = JSON.parse(xmlhttp.responseText);
+                    var mas = obj.predictions;
+                    var list = [];
+                    for (var i = 0; i < obj.predictions.length; i++) {
+                        list += obj.predictions[i].description;
+                    }
+                    answerDiv.innerHTML = list;
+                }
+            }
+        };
+        xmlhttp.send(null);
+    }
+
     function messagePost() {
         answerDiv.innerHTML = '';
         showDiv(newMessageDiv);
 
-        // fix radio buttons
-        // for (var i = 0; i < document.getElementsByName('rad_btn_location').length; i++) {
-        //document.getElementsByName('rad_btn_location')[i].addEventListener('', selectGpsOrAddress, false);
-        //  }
-        //document.getElementByValue('GPS').addEventListener('selectionchange', selectGpsOrAddress, false);
-        //document.getElementByValue('address').addEventListener('selectionchange', selectGpsOrAddress, false);
+        document.getElementById('addressInput').addEventListener('input', addressPredict, false);
+        document.getElementById('check_box_GPS').addEventListener('CheckboxStateChange', selectGpsOrAddress, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
     }
 
     function selectGpsOrAddress() {
-        if( document.getElementById('rad_btn_location').selectedIndex == 1 ) {
-            addressInput.disabled = false;
+        if( document.getElementById('check_box_GPS').checked == true ) {
+            addressInput.disabled = true;
         }
         else {
-            addressInput.disabled = true;
+            addressInput.disabled = false;
         }
     }
 
-    function locationByAddress(adress) {       
+    function locationByAddress() {       
        var xmlhttp = getXmlHttp();
-       var adress = 'Moscow,+Kulakova,+15';
-       var request = 'https://maps.googleapis.com/maps/api/geocode/json?address='+adress+'&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
+       var address = 'Moscow,+Kulakova,+15';
+       var request = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address +
+           '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
        xmlhttp.open('GET', request, true);
        xmlhttp.onreadystatechange = function () {
            if (xmlhttp.readyState == 4) {
@@ -71,9 +90,24 @@
        };
        xmlhttp.send(null);
     }
+    
+    function addressByLocation() {
+        var xmlhttp = getXmlHttp();
+        var request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coordinates[1] + ',' + coordinates[0] + '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
+        xmlhttp.open('GET', request, true);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    var obj = JSON.parse(xmlhttp.responseText);
+                    return obj.results.formatted_address;
+                }
+            }
+        };
+        xmlhttp.send(null);
+    }
 
     function sendMessage(){
-        var place = '';
+        var place = addressByLocation();
         var temp = document.getElementById('situations');
         send('https://eco.cyrilmarten.com/Ecology.svc/addwork', 'POST', JSON.stringify({
             Description: document.getElementById('description').value,
