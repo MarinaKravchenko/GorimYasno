@@ -18,17 +18,22 @@
     var search_last_10 = document.getElementById('search_last_10');
     var search_by_time_div_answer = document.getElementById('search_by_time_div_answer');
     var search_by_geoposition_div = document.getElementById('search_by_geoposition_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer];
+    var about_programm_div = document.getElementById('about_programm_div');
+    var about_authors_div = document.getElementById('about_authors_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, about_programm_div, about_authors_div];
     var addressInput = document.getElementById('addressInput');
     
     var situations = document.getElementById('situations');
     var user;
     var coordinates = [55, 35];
+    var session_key;
 
     function onDeviceReady() {
 
         document.getElementById('btn_sign_in').addEventListener('click', signInClick, false);
         document.getElementById('btn_sign_up').addEventListener('click', signUpClick, false);
+        document.getElementById('btn_about_programm').addEventListener('click', aboutProgrammClick, false);
+        document.getElementById('btn_about_authors').addEventListener('click', aboutAuthorsClick, false);
     };
 
     function messagePost() {
@@ -75,13 +80,14 @@
     function sendMessage(){
         var place = '';
         var temp = document.getElementById('situations');
-        send('https://eco.cyrilmarten.com/Ecology.svc/addwork', 'POST', JSON.stringify({
+        send('http://localhost:56989//Ecology.svc/addwork', 'POST', JSON.stringify({
             Description: document.getElementById('description').value,
             SituationId: situations.selectedIndex,
             Longitude: coordinates[0],
             Latitude: coordinates[1],
             PlaceName: place,
-            Radius: document.getElementById('radius').value
+            Radius: document.getElementById('radius').value,
+            Relation: document.getElementByName('rad_btn_relation').value
         }), function (x) {
             answerDiv.innerHTML = x;
         })
@@ -113,7 +119,7 @@
 
   //  function messageGet() {
   //      var xmlhttp = getXmlHttp();
-  //      xmlhttp.open('GET', 'https://eco.cyrilmarten.com/Ecology.svc/work/Hello!', true);
+    //      xmlhttp.open('GET', 'http://localhost:56989/Ecology.svc/work/Hello!', true);
   //      xmlhttp.onreadystatechange = function () {
   //          if (xmlhttp.readyState == 4) {
   //              if (xmlhttp.status == 200) {
@@ -154,11 +160,12 @@
     }
 
     function signIn() {
-        send('https://eco.cyrilmarten.com/Ecology.svc/login', 'POST', JSON.stringify({
+        send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
             Login: document.getElementById('login').value,
             Password: document.getElementById('password').value
         }), function (x) {
-            if (x == '{"LoginUserResult":1}') {
+            if (x != '{"LoginUserResult":null}') {
+                session_key = x;
                 user = document.getElementById('login').value;
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
@@ -183,7 +190,7 @@
     function signUp() {
         if (document.getElementById('login_new').value != '' && document.getElementById('password_new').value != '' &&
             document.getElementById('email_new').value != '') {
-            send('https://eco.cyrilmarten.com/Ecology.svc/create', 'POST', JSON.stringify({
+            send('http://localhost:56989/Ecology.svc/create', 'POST', JSON.stringify({
                 Login: document.getElementById('login_new').value,
                 Password: document.getElementById('password_new').value,
                 Email: document.getElementById('email_new').value
@@ -223,11 +230,10 @@
     function search_last_ten_click() {
         searchDiv.hidden = true;
         var xmlhttp = getXmlHttp();
-        xmlhttp.open('GET', 'https://eco.cyrilmarten.com/Ecology.svc/searchlast10', true);
+        xmlhttp.open('GET', 'http://localhost:56989/Ecology.svc/searchlast10', true);
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
-                    alert('COOL');
                     search_last_10.innerHTML = xmlhttp.responseText;
                 }
             }
@@ -240,9 +246,8 @@
         document.getElementById('btn_search_by_time').addEventListener('click', search_by_time, false);
     }
     function search_by_time(){
-        send('https://eco.cyrilmarten.com/Ecology.svc/search', 'POST', JSON.stringify({
+        send('http://localhost:56989/Ecology.svc/search', 'POST', JSON.stringify({
             Accident_Date: Date(document.getElementById('search_time').value),
-            Accident_Id: 1
         }), function (x) {
             search_by_time_div_answer.innerHTML = x;
         })
@@ -257,4 +262,12 @@
 
 
     }
+
+    function aboutProgrammClick() {
+        showDiv(about_programm_div)
+    }
+    function aboutAuthorsClick() {
+        showDiv(about_authors_div)
+    }
+
 } )();

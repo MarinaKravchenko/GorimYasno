@@ -1,6 +1,28 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+ <style>
+     h3 {
+         color:forestgreen; text-align:center; font-family:Gabriola; font-size:xx-large
+     }
+     
+     body {
+         background-image: url("../pictures/fon.jpg")
+     }
+
+     div {
+         color:forestgreen; text-align:center; font-family:Gabriola; font-size:large
+     }
+     button{
+         color:cornsilk; align-self:center; font-family:Gabriola; background-color:forestgreen; border:hidden; 
+     }
+     input{
+         border-color:darkseagreen; font-family:'Adobe Song Std'
+     }
+     select{
+         font-family:'Adobe Song Std'
+     }
+ </style>
     <meta charset="utf-8" />
     <!--
         Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
@@ -13,14 +35,16 @@
     <link href="css/index.css" rel="stylesheet" />
 
 </head>
-<body>
+<body >
     <h3>Ecology Watcher</h3>
     
-    <div id="startDiv">
-        <p>
-            Nice to see you! <br />
-            <button id="btn_sign_in">Sign in</button>
-            <button id="btn_sign_up">Sign up</button>
+    <div id="startDiv"><br /><br />
+        <p> 
+            Nice to see you! <br /><br />
+            <button id="btn_sign_in">Sign in</button><br />
+            <button id="btn_sign_up">Sign up</button><br />
+            <button id="btn_about_programm">About programm</button><br />
+            <button id="btn_about_authors">About authors</button>
         </p>
     </div>
 
@@ -59,11 +83,11 @@
         <p>
             Please, choose your situation:<br />
             <select id="situations">
-                <option value="Other">Fire</option>
-                <option value="Other">Smoke</option>
-                <option value="Other">Flood</option>
-                <option value="Other">Rubbish</option>
-                <option value="Other">Oil spill</option>
+                <option value="Fire">Fire</option>
+                <option value="Smoke">Smoke</option>
+                <option value="Flood">Flood</option>
+                <option value="Rubbish">Rubbish</option>
+                <option value="Oilspill">Oil spill</option>
             </select><br />
             Approximate radius (metres): <br />
             <input id="radius" /> <br />
@@ -74,8 +98,12 @@
             <input type="radio" id="rad1" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
             <input type="radio" id="rad2" name="rad_btn_location" value="address">Enter adress:<br />
             <input id="addressInput" disabled ="disabled"/> <br/>
+            <input type="radio" id="rad_like" name="rad_btn_relation" value="1">
+                <img src="../pictures/like.png"/> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <input type="radio" id="rad_dislike" name="rad_btn_relation" value="2">
+                <img src="../pictures/dislike.png"/><br/>
             <button type="submit" id="btn_submit">Post</button>
-        </p>
+            </p>
     </div>
 
     <div id="answerDiv"></div>
@@ -110,6 +138,19 @@
         <input type="radio" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
         <input type="radio" name="rad_btn_location" value="address">Enter adress:<br />
         <input id="addressInput" disabled="disabled" /> <br />
+    </div>
+
+    <div id="about_programm_div" hidden="hidden">
+        <p>
+            The main idea of EcologyWatcher is to help users to get involved in protection of the Earth. Everyone can post a message about some ecological disasters as well as learn information about others.
+        </p>
+
+    </div>
+
+    <div id="about_authors_div"hidden="hidden">
+        <p>
+            This application was created by the second year students of Higher School of Economics Kravchenko Marina and Trofimenko Anastasia. We also want to express our gratitude to our research manager Gomenuk Kirill Sergeevich for the idea and help in programming part.
+        </p>
     </div>
 
     <!-- Cordova reference, this is added to your app when it's built. -->

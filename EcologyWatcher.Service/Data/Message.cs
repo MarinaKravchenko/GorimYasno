@@ -21,7 +21,9 @@ namespace EcologyWatcher.Service.DTO
         public string PlaceName { get; set; }
         [DataMember]
         public double Radius { get; set; }
+        [DataMember]
+        public int Relation { get; set; }
         //[DataMember]
-       // public byte[] Picture { get; set; }
+        // public byte[] Picture { get; set; }
     }
 }
