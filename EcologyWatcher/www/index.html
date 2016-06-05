@@ -3,7 +3,10 @@
 <head>
  <style>
      h3 {
-         color:forestgreen; text-align:center; font-family:Gabriola; font-size:xx-large
+         color:forestgreen; 
+         text-align:center;
+         font-family:Gabriola; 
+         font-size:xx-large
      }
      
      body {
@@ -11,13 +14,21 @@
      }
 
      div {
-         color:forestgreen; text-align:center; font-family:Gabriola; font-size:large
+         color:forestgreen; 
+         text-align:center; 
+         font-family:Gabriola; 
+         font-size:large
      }
      button{
-         color:cornsilk; align-self:center; font-family:Gabriola; background-color:forestgreen; border:hidden; 
+         color:cornsilk;
+         align-self:center; 
+         font-family:Gabriola; 
+         background-color:forestgreen;
+         border:hidden; 
      }
      input{
-         border-color:darkseagreen; font-family:'Adobe Song Std'
+         border-color:darkseagreen; 
+         font-family:'Adobe Song Std'
      }
      select{
          font-family:'Adobe Song Std'
@@ -125,7 +136,6 @@
             <button id="btn_search_by_time">Search</button><br />
         </p>
     </div>    
-    <div id="search_by_time_div_answer" hidden="hidden"></div>
     
     <div id="search_by_geoposition_div" hidden="hidden">
         <p>
@@ -134,11 +144,11 @@
             <button id="btn_search_by_geoposition">Search</button><br />
         </p>
     </div>
-    <div id="search_by_time_div_answer" hidden="hidden">
+    <!-->div id="search_by_time_div_answer" hidden="hidden">
         <input type="radio" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
         <input type="radio" name="rad_btn_location" value="address">Enter adress:<br />
         <input id="addressInput" disabled="disabled" /> <br />
-    </div>
+    </!--div-->
 
     <div id="about_programm_div" hidden="hidden">
         <p>
@@ -152,6 +162,7 @@
             This application was created by the second year students of Higher School of Economics Kravchenko Marina and Trofimenko Anastasia. We also want to express our gratitude to our research manager Gomenuk Kirill Sergeevich for the idea and help in programming part.
         </p>
     </div>
+
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>

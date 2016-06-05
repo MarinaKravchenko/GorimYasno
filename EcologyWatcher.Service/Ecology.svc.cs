@@ -202,12 +202,13 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Description = temp[i].Accident_Details.Comments;
-                    list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
-                    list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
-                    list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
-                    list[i].PlaceName = temp[i].Accident.Place_Adress;
-                    list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
+                    Message m = new Message();
+                    m.Description = temp[i].Accident_Details.Comments;
+                    m.SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
+                    m.Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
+                    m.Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
+                    m.PlaceName = temp[i].Accident.Place_Adress;
+                    m.Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
                 }
 
             }

@@ -1,0 +1,56 @@
+﻿'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\System.Web\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Web.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Web.ApplicationServices\v4.0_4.0.0.0__31bf3856ad364e35\System.Web.ApplicationServices.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: Domain 2): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\System.Web\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Web.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Web.ApplicationServices\v4.0_4.0.0.0__31bf3856ad364e35\System.Web.ApplicationServices.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Runtime.Caching\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Runtime.Caching.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Runtime.Caching\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Runtime.Caching.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\mscorlib.resources\v4.0_4.0.0.0_ru_b77a5c561934e089\mscorlib.resources.dll'. Module was built without symbols.
+Exception thrown: 'System.UnauthorizedAccessException' in mscorlib.dll
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.Build.Utilities.v4.0\v4.0_4.0.0.0__b03f5f7f11d50a3a\Microsoft.Build.Utilities.v4.0.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.Build.Utilities.v4.0\v4.0_4.0.0.0__b03f5f7f11d50a3a\Microsoft.Build.Utilities.v4.0.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.JScript\v4.0_10.0.0.0__b03f5f7f11d50a3a\Microsoft.JScript.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.VisualStudio.Web.PageInspector.Loader\v4.0_1.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Web.PageInspector.Loader.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.VisualStudio.Web.PageInspector.Runtime\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Web.PageInspector.Runtime.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel.Activation\v4.0_4.0.0.0__31bf3856ad364e35\System.ServiceModel.Activation.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Web.Extensions\v4.0_4.0.0.0__31bf3856ad364e35\System.Web.Extensions.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel.Internals\v4.0_4.0.0.0__31bf3856ad364e35\System.ServiceModel.Internals.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\mscorlib.resources\v4.0_4.0.0.0_ru_b77a5c561934e089\mscorlib.resources.dll'. Module was built without symbols.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel\v4.0_4.0.0.0__b77a5c561934e089\System.ServiceModel.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\SMDiagnostics\v4.0_4.0.0.0__b77a5c561934e089\SMDiagnostics.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.VisualStudio.Web.PageInspector.Tracing\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Web.PageInspector.Tracing.dll'. Cannot find or open the PDB file.
+'iexplore.exe' (Script): Loaded 'Script Code (Windows Internet Explorer)'. 
+The thread 0x1370 has exited with code 0 (0x0).
+The thread 0x1240 has exited with code 0 (0x0).
+The thread 0x1204 has exited with code 0 (0x0).
+The thread 0x12ec has exited with code 0 (0x0).
+The thread 0x19d4 has exited with code 0 (0x0).
+The thread 0xa88 has exited with code 0 (0x0).
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xaml.Hosting\v4.0_4.0.0.0__31bf3856ad364e35\System.Xaml.Hosting.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel.WasHosting\v4.0_4.0.0.0__b77a5c561934e089\System.ServiceModel.WasHosting.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\assembly\GAC_MSIL\Microsoft.Web.Administration\7.9.0.0__31bf3856ad364e35\Microsoft.Web.Administration.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Users\Matilda\AppData\Local\Temp\Temporary ASP.NET Files\vs\e56109ad\a8feb04\assembly\dl3\24dfb89f\b6b58f91_2ebfd101\EcologyWatcher.Service.dll'. Symbols loaded.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel.Web\v4.0_4.0.0.0__31bf3856ad364e35\System.ServiceModel.Web.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Runtime.Serialization\v4.0_4.0.0.0__b77a5c561934e089\System.Runtime.Serialization.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel.Channels\v4.0_4.0.0.0__31bf3856ad364e35\System.ServiceModel.Channels.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\Microsoft.VisualStudio.Diagnostics.ServiceModelSink\v4.0_4.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Diagnostics.ServiceModelSink.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Web.Services\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Web.Services.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.IdentityModel\v4.0_4.0.0.0__b77a5c561934e089\System.IdentityModel.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Net.Http\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Net.Http.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\System.Transactions\v4.0_4.0.0.0__b77a5c561934e089\System.Transactions.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xaml\v4.0_4.0.0.0__b77a5c561934e089\System.Xaml.dll'. Cannot find or open the PDB file.
+'iisexpress.exe' (CLR v4.0.30319: /LM/W3SVC/2/ROOT-1-131096077721146137): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.ServiceModel.resources\v4.0_4.0.0.0_ru_b77a5c561934e089\System.ServiceModel.resources.dll'. Module was built without symbols.
+The thread 0x1658 has exited with code 0 (0x0).
+The thread 0x7f8 has exited with code 0 (0x0).
+The thread 0x1700 has exited with code 0 (0x0).
+The program '[6888] iexplore.exe' has exited with code 0 (0x0).
+The program '[1328] iisexpress.exe' has exited with code -1 (0xffffffff).

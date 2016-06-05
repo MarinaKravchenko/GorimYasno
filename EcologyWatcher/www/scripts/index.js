@@ -20,7 +20,7 @@
     var search_by_geoposition_div = document.getElementById('search_by_geoposition_div');
     var about_programm_div = document.getElementById('about_programm_div');
     var about_authors_div = document.getElementById('about_authors_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, about_programm_div, about_authors_div];
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div];
     var addressInput = document.getElementById('addressInput');
     
     var situations = document.getElementById('situations');
@@ -111,7 +111,7 @@
         xmlhttp.send(null);
     }
 
-    function sendMessage(){
+    function sendMessage() {
         var place = addressByLocation();
         var temp = document.getElementById('situations');
         send('http://localhost:56989//Ecology.svc/addwork', 'POST', JSON.stringify({
