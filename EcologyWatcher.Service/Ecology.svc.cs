@@ -121,29 +121,59 @@ namespace EcologyWatcher.Service
             catch { return true; }
         }
 
+        //[OperationContract]
+        //[WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
+        //    , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
+        //public List<Message> Search (DateTime date_from, int start_from)
+        //{
+        //    List<Message> list = new List<Message>();
+
+        //    try
+        //    {
+        //        var temp = db.Accident.Join(db.Accident_Details, 
+        //            ac => ac.Accident_Id, 
+        //            ad => ad.Accident_Id, 
+        //            (ac, ad) => new { Accident = ac, Accident_Details = ad}).
+        //            Where(a => ((a.Accident_Details.Accident_Date == date_from) && (a.Accident.Accident_Id >= start_from))).ToList();
+
+        //        for (int i = 0; i < temp.Count; i++)
+        //        {
+        //            list[i].Description = temp[i].Accident_Details.Comments;
+        //            list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
+        //            list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
+        //            list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
+        //            list[i].PlaceName = temp[i].Accident.Place_Adress;
+        //            list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
+        //        }
+
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+        //    return list;
+        //}
+
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
-            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
-        public List<Message> Search (DateTime date_from, int start_from)
+, ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
+        public List<Event> Search(DateTime date_from)
         {
-            List<Message> list = new List<Message>();
+            List<Event> list = new List<Event>();
 
             try
             {
-                var temp = db.Accident.Join(db.Accident_Details, 
-                    ac => ac.Accident_Id, 
-                    ad => ad.Accident_Id, 
-                    (ac, ad) => new { Accident = ac, Accident_Details = ad}).
-                    Where(a => ((a.Accident_Details.Accident_Date == date_from) && (a.Accident.Accident_Id >= start_from))).ToList();
+                var temp = db.Accident.Join(db.Accident_Details,
+                    ac => ac.Accident_Id,
+                    ad => ad.Accident_Id,
+                    (ac, ad) => new { Accident = ac, Accident_Details = ad }).
+                    Where(a => (a.Accident_Details.Accident_Date >= date_from)).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Description = temp[i].Accident_Details.Comments;
-                    list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
-                    list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
-                    list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
-                    list[i].PlaceName = temp[i].Accident.Place_Adress;
-                    list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
+                    list[i].Situation_Name = temp[i].Accident.Situation.Situation_Name;
+                    list[i].Place_Name = temp[i].Accident.Place_Adress;
+                    list[i].Accident_Date = DateTime.Parse(temp[i].Accident_Details.Accident_Date.ToString());
                 }
 
             }
@@ -219,16 +249,28 @@ namespace EcologyWatcher.Service
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "login")]
-        public int LoginUser(User user)
+        public string LoginUser(User user)
         {
+            Session session = new Session();
             try
             {
                 currentUser = db.User_Data.Single(u => ((u.Login == user.Login) && (u.Password_Hash == user.Password)));
-                return 1;
+                if (currentUser != null)
+                {
+                    var g = Guid.NewGuid().ToString();
+                    session.Code = g;
+                    db.Session.Add(session);
+                    db.SaveChanges();
+                    return g;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch 
             {
-                return -1;
+                return null;
             }
         }
 
