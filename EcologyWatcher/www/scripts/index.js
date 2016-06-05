@@ -21,11 +21,10 @@
     var about_programm_div = document.getElementById('about_programm_div');
     var about_authors_div = document.getElementById('about_authors_div');
     var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, about_programm_div, about_authors_div];
-    var addressInput = document.getElementById('addressInput');
-    
+        
     var situations = document.getElementById('situations');
     var user;
-    var coordinates = [55, 35];
+    var coordinates = [35, 55];
     var session_key;
 
     function onDeviceReady() {
@@ -47,11 +46,11 @@
                 if (xmlhttp.status == 200) {
                     var obj = JSON.parse(xmlhttp.responseText);
                     var mas = obj.predictions;
-                    var list = [];
+                    var str = '';
                     for (var i = 0; i < mas.length; i++) {
-                        list.push(mas[i].description);
+                        str += '<option value="' + mas[i].description + '" />';
                     }
-                    document.getElementById('addressInput').innerHTML = list;
+                    document.getElementById('addressInput').innerHTML = str;
                 }
             }
         };
@@ -63,7 +62,7 @@
         showDiv(newMessageDiv);
 
         document.getElementById('addressInputText').addEventListener('input', addressPredict, false);
-        document.getElementById('check_box_GPS').addEventListener('CheckboxStateChange', selectGpsOrAddress, false);
+        document.getElementById('check_box_GPS').addEventListener('change', selectGpsOrAddress, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
     }
 
@@ -76,9 +75,11 @@
         }
     }
 
-    function locationByAddress() {       
-       var xmlhttp = getXmlHttp();
-       var address = 'Moscow,+Kulakova,+15';
+    function locationByAddress() {
+        coordinates = [];
+        var xmlhttp = getXmlHttp();
+        var address = document.getElementById('addressInputText').value;
+       address = address.replace(' ', '');
        var request = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address +
            '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
        xmlhttp.open('GET', request, true);
@@ -87,9 +88,7 @@
                if (xmlhttp.status == 200) {
                    var obj = JSON.parse(xmlhttp.responseText);
                    var div = document.getElementById('answerDiv');
-                   div.innerHTML = 'Latitude: ' + obj.results[0].geometry.location.lat + '<br/>'
-                       + 'Longitude: ' + obj.results[0].geometry.location.lng;
-                   coordinates = [obj.results[0].geometry.location.lng, obj.results[0].geometry.location.lat];
+                   coordinates = [obj.results[0].geometry.location.lat, obj.results[0].geometry.location.lng];
                }
            }
        };
@@ -98,33 +97,55 @@
     
     function addressByLocation() {
         var xmlhttp = getXmlHttp();
-        var request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coordinates[1] + ',' + coordinates[0] + '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
+        var request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coordinates[0] + ',' + coordinates[1] + '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
         xmlhttp.open('GET', request, true);
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var obj = JSON.parse(xmlhttp.responseText);
-                    return obj.results.formatted_address;
+                    if (obj == null) {
+                        return '';
+                    } else return obj.results.formatted_address;
                 }
             }
         };
         xmlhttp.send(null);
     }
 
-    function sendMessage(){
-        var place = addressByLocation();
-        var temp = document.getElementById('situations');
-        send('http://localhost:56989//Ecology.svc/addwork', 'POST', JSON.stringify({
-            Description: document.getElementById('description').value,
-            SituationId: situations.selectedIndex,
-            Longitude: coordinates[0],
-            Latitude: coordinates[1],
-            PlaceName: place,
-            Radius: document.getElementById('radius').value,
-            Relation: document.getElementByName('rad_btn_relation').value
-        }), function (x) {
-            answerDiv.innerHTML = x;
-        })
+    function sendMessage() {
+        var place;
+        if (!document.getElementById('check_box_GPS').checked && document.getElementById('addressInputText').value != null) {
+            place = document.getElementById('addressInputText').value;
+            locationByAddress();
+        }
+        else if (document.getElementById('check_box_GPS').checked) {
+            getPosition();
+            place = addressByLocation();
+        }
+        var relation;
+        if (document.getElementById('rad_like').checked) {
+            relation = 1;
+        } else if (document.getElementById('rad_dislike').checked) {
+            relation = 2;
+        }
+        if (document.getElementById('description').value != null && coordinates.length == 2 &&
+            place != null && document.getElementById('radius').value != null && relation != null) {
+            var temp = document.getElementById('situations');
+            send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
+                Description: document.getElementById('description').value,
+                SituationId: situations.selectedIndex,
+                Longitude: coordinates[1],
+                Latitude: coordinates[0],
+                PlaceName: place,
+                Radius: document.getElementById('radius').value,
+                Relation: relation
+            }), function (x) {
+                answerDiv.innerHTML = x;
+            })
+        }
+        else {
+            answerDiv.innerHTML = 'Please, check your input.';
+        }
     }
 
     function send(url, method, data, callback) {
@@ -183,7 +204,6 @@
 
     function onSuccess(position) {
         coordinates = [position.coords.latitude, position.coords.longitude];
-        answerDiv.innerHTML = 'Latitude: ' + position.coords.latitude + '<br/>' + 'Longitude: ' + position.coords.longitude;
     }
 
     function signInClick() {
