@@ -3,7 +3,10 @@
 <head>
  <style>
      h3 {
-         color:forestgreen; text-align:center; font-family:Gabriola; font-size:xx-large
+         color:forestgreen; 
+         text-align:center;
+         font-family:Gabriola; 
+         font-size:xx-large
      }
      
      body {
@@ -11,13 +14,21 @@
      }
 
      div {
-         color:forestgreen; text-align:center; font-family:Gabriola; font-size:large
+         color:forestgreen; 
+         text-align:center; 
+         font-family:Gabriola; 
+         font-size:large
      }
      button{
-         color:cornsilk; align-self:center; font-family:Gabriola; background-color:forestgreen; border:hidden; 
+         color:cornsilk;
+         align-self:center; 
+         font-family:Gabriola; 
+         background-color:forestgreen;
+         border:hidden; 
      }
      input{
-         border-color:darkseagreen; font-family:'Adobe Song Std'
+         border-color:darkseagreen; 
+         font-family:'Adobe Song Std'
      }
      select{
          font-family:'Adobe Song Std'
@@ -74,6 +85,7 @@
         <p>            
             Choose option:<br /><br />
             <button id="btn_post_message">New message</button><br />
+            <button id="btn_update_news">Update news</button><br />                                                     
             <button id="btn_search">Search info</button><br />
             <button id="btn_settings">Settings</button><br />
         </p>
@@ -108,6 +120,24 @@
             </p>
     </div>
 
+    <div id="update_news_div" hidden="hidden">
+        <p>
+            Please, input Accident ID
+            <input id="accident_id_input" inputmode="numeric" />
+            Approximate radius (metres): <br />
+            <input id="radius" inputmode="numeric" /> <br />
+            Describe it:
+            <input id="description" /><br />
+            When did it happen? <br />
+            <input type="date" id="date" /><br />
+            <input type="radio" id="rad_like" name="rad_btn_relation" value="1">
+            <img src="../pictures/like.png" /> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <input type="radio" id="rad_dislike" name="rad_btn_relation" value="2">
+            <img src="../pictures/dislike.png" /><br />
+            <button type="submit" id="btn_update">Update</button>
+        </p>
+    </div>
+
     <div id="answerDiv"></div>
 
     <div id="searchDiv" hidden="hidden">
@@ -118,16 +148,16 @@
             <button id="btn_search_last_ten_click">Search last ten</button><br />
         </p>
     </div>
-    <div id="search_last_10"></div>
+
+    <div id="search_last_10" hidden="hidden"></div>
 
     <div id="search_by_time_div" hidden="hidden">
         <p>
-             Please, input time <br />
+             Please, input date <br />
             <input type="date" id="search_time" /><br />
             <button id="btn_search_by_time">Search</button><br />
         </p>
     </div>    
-    <div id="search_by_time_div_answer" hidden="hidden"></div>
     
     <div id="search_by_geoposition_div" hidden="hidden">
         <p>
@@ -137,9 +167,7 @@
         </p>
     </div>
     <div id="search_by_time_div_answer" hidden="hidden">
-        <input type="radio" name="rad_btn_location" value="GPS" checked="checked">Use my current coordinates<br />
-        <input type="radio" name="rad_btn_location" value="address">Enter adress:<br />
-        <input id="addressInput" disabled="disabled" /> <br />
+        
     </div>
 
     <div id="about_programm_div" hidden="hidden">
@@ -154,6 +182,7 @@
             This application was created by the second year students of Higher School of Economics Kravchenko Marina and Trofimenko Anastasia. We also want to express our gratitude to our research manager Gomenuk Kirill Sergeevich for the idea and help in programming part.
         </p>
     </div>
+
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>

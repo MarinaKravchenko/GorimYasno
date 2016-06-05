@@ -20,6 +20,8 @@ namespace EcologyWatcher.Service.DTO
         [DataMember]
         public string PlaceName { get; set; }
         [DataMember]
+        public DateTime Accident_Date { get; set; }
+        [DataMember]
         public double Radius { get; set; }
         [DataMember]
         public int Relation { get; set; }

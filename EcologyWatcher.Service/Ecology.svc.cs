@@ -27,39 +27,40 @@ namespace EcologyWatcher.Service
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json, UriTemplate = "addwork")]
-        public int NewMessage(Message message)
+            ResponseFormat = WebMessageFormat.Json, UriTemplate = "addwork/{session_key}")]
+        public int NewMessage(Message message, string session_key)
         {
             var accident = new Accident();
             var accident_details = new Accident_Details();
-
+            var session = db.Session.Where(s => s.Code == session_key).First();
             try
             {
                 accident.Status_Id = 1;
-                accident.User_Id = 8;
+                accident.User_Id = session.User_Id;
                 accident.Situation_Id = message.SituationId + 1;
                 accident.Place_Lat = message.Latitude;
                 accident.Place_Long = message.Longitude;
                 accident.Place_Adress = message.PlaceName;
                 db.Accident.Add(accident);
-
-                accident_details.Accident_Id = db.Accident.Count();
-                accident_details.Accident_Date = DateTime.Now;
-                accident_details.Comments = message.Description;
-                accident_details.Relation_Id = 1;
-                accident_details.Radius = message.Radius;
-                db.Accident_Details.Add(accident_details);
-
-                try
-                {
-                    db.SaveChanges();
-                }
-                catch { return -4; }
+                db.SaveChanges();
             }
             catch
             {
-                return -2;
-
+                return -5;
+            }
+            try
+            {
+                accident_details.Accident_Id = db.Accident.Last().Accident_Id;
+                accident_details.Accident_Date = message.Accident_Date;
+                accident_details.Comments = message.Description;
+                accident_details.Relation_Id = message.Relation;
+                accident_details.Radius = message.Radius;
+                db.Accident_Details.Add(accident_details);
+                db.SaveChanges();
+            }
+            catch
+            {
+                return -4;
             }
 
             if (accident.Accident_Id > 0)
@@ -72,37 +73,32 @@ namespace EcologyWatcher.Service
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
-            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews/{id}")]
-        public bool AddNews(string id, Message message)
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
+        public bool AddNews(Update update)
         {
-            var minX = message.Latitude - message.Radius / 111.3;
-            var maxX = message.Latitude + message.Radius / 111.3;
-            var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
-            var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
-
-            var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
+            var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id);
+            //var minX = update.Accident_Id.Latitude - message.Radius / 111.3;
+            //var maxX = message.Latitude + message.Radius / 111.3;
+            //var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
+            //var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
+            //
+            //var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
 
             var accident_details = new Accident_Details();
 
             try
             {
-                accident_details.Accident_Date = DateTime.Now;
-                accident_details.Comments = message.Description;
-                accident_details.Accident_Id = accident.Accident_Id;
-                accident_details.Relation_Id = 1;
-                accident_details.Radius = message.Radius;
+                accident_details.Accident_Date = update.Accident_Date;
+                accident_details.Comments = update.Description;
+                accident_details.Accident_Id = update.Accident_Id;
+                accident_details.Relation_Id = update.Relation;
+                accident_details.Radius = update.Radius;
             }
             catch
             {
                 return false;
             }
-
-            if (accident.Accident_Id > 0)
-            {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         [OperationContract]
@@ -171,7 +167,7 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    string e = String.Format("{0} {1} {2}", temp[i].Accident.Situation.Situation_Name, temp[i].Accident.Place_Adress, temp[i].Accident_Details.Accident_Date.ToString());
+                    string e = String.Format("{0} {1} {2} {3}", temp[i].Accident.Accident_Id, temp[i].Accident.Situation.Situation_Name, temp[i].Accident.Place_Adress, temp[i].Accident_Details.Accident_Date.ToString());
                     list.Add(e);
                 }
             }
@@ -199,12 +195,13 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Description = temp[i].Accident_Details.Comments;
-                    list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
-                    list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
-                    list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
-                    list[i].PlaceName = temp[i].Accident.Place_Adress;
-                    list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
+                    Message m = new Message();
+                    m.Description = temp[i].Accident_Details.Comments;
+                    m.SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
+                    m.Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
+                    m.Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
+                    m.PlaceName = temp[i].Accident.Place_Adress;
+                    m.Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
                 }
 
             }
