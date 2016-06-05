@@ -73,8 +73,8 @@ namespace EcologyWatcher.Service
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
-            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
-        public bool AddNews(Update update)
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews/{session_key}")]
+        public bool AddNews(Update update, string session_key)
         {
             var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id);
             //var minX = update.Accident_Id.Latitude - message.Radius / 111.3;
