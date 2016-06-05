@@ -157,9 +157,9 @@ namespace EcologyWatcher.Service
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
 , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
-        public List<Event> Search(DateTime date_from)
+        public List<string> Search(DateTime date_from)
         {
-            List<Event> list = new List<Event>();
+            List<string> list = new List<string>();
             
             try
             {
@@ -171,10 +171,7 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    Event e = new Event();
-                    e.Situation_Name = temp[i].Accident.Situation.Situation_Name;
-                    e.Place_Name = temp[i].Accident.Place_Adress;
-                    e.Accident_Date = DateTime.Parse(temp[i].Accident_Details.Accident_Date.ToString());
+                    string e = String.Format("{0} {1} {2}", temp[i].Accident.Situation.Situation_Name, temp[i].Accident.Place_Adress, temp[i].Accident_Details.Accident_Date.ToString());
                     list.Add(e);
                 }
             }

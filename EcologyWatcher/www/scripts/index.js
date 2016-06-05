@@ -37,7 +37,7 @@
     };
 
     function addressPredict() {
-        var input = document.getElementById('addressInput').value;
+        var input = document.getElementById('addressInputText').value;
         var xmlhttp = getXmlHttp();
         var request = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + input +
             '&types=address&language=en&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
@@ -51,7 +51,7 @@
                     for (var i = 0; i < obj.predictions.length; i++) {
                         list += obj.predictions[i].description;
                     }
-                    answerDiv.innerHTML = list;
+                    document.getElementById('address')
                 }
             }
         };
@@ -62,17 +62,17 @@
         answerDiv.innerHTML = '';
         showDiv(newMessageDiv);
 
-        document.getElementById('addressInput').addEventListener('input', addressPredict, false);
+        document.getElementById('addressInputText').addEventListener('input', addressPredict, false);
         document.getElementById('check_box_GPS').addEventListener('CheckboxStateChange', selectGpsOrAddress, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
     }
 
     function selectGpsOrAddress() {
         if( document.getElementById('check_box_GPS').checked == true ) {
-            addressInput.disabled = true;
+            document.getElementById('addressInputText').disabled = true;
         }
         else {
-            addressInput.disabled = false;
+            document.getElementById('addressInputText').disabled = false;
         }
     }
 
@@ -283,7 +283,13 @@
         send('http://localhost:56989/Ecology.svc/search', 'POST', JSON.stringify({
             Accident_Date: Date(document.getElementById('search_time').value),
         }), function (x) {
-            search_by_time_div_answer.innerHTML = x;
+            var obj = JSON.parse(x);
+            var list = [];
+            for (var i = 0; i < obj.SearchResult.length; i++) {
+                list.push(obj.SearchResult[i]);
+                list.push('<br>');
+            }
+            search_by_time_div_answer.innerHTML = list;
         })
         answerDiv=''
         showDiv(search_by_time_div_answer);
