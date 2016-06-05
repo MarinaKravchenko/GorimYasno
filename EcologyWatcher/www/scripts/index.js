@@ -188,7 +188,7 @@
     }
 
     function signIn() {
-        send('https://eco.cyrilmarten.com/Ecology.svc/login', 'POST', JSON.stringify({
+        send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
             Login: document.getElementById('login').value,
             Password: document.getElementById('password').value
         }), function (x) {
