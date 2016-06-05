@@ -48,10 +48,10 @@
                     var obj = JSON.parse(xmlhttp.responseText);
                     var mas = obj.predictions;
                     var list = [];
-                    for (var i = 0; i < obj.predictions.length; i++) {
-                        list += obj.predictions[i].description;
+                    for (var i = 0; i < mas.length; i++) {
+                        list.push(mas[i].description);
                     }
-                    document.getElementById('address')
+                    document.getElementById('addressInput').innerHTML = list;
                 }
             }
         };
