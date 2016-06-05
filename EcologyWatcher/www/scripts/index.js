@@ -20,8 +20,10 @@
     var search_by_geoposition_div = document.getElementById('search_by_geoposition_div');
     var about_programm_div = document.getElementById('about_programm_div');
     var about_authors_div = document.getElementById('about_authors_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, about_programm_div, about_authors_div];
-        
+   
+    var update_news_div = document.getElementById('update_news_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div];
+   
     var situations = document.getElementById('situations');
     var user;
     var coordinates = [35, 55];
@@ -131,7 +133,8 @@
         if (document.getElementById('description').value != null && coordinates.length == 2 &&
             place != null && document.getElementById('radius').value != null && relation != null) {
             var temp = document.getElementById('situations');
-            send('http://localhost:56989/Ecology.svc/addwork', 'POST', JSON.stringify({
+            var request = 'http://localhost:56989//Ecology.svc/addwork/' + session_key;
+            send(request, 'POST', JSON.stringify({
                 Description: document.getElementById('description').value,
                 SituationId: situations.selectedIndex,
                 Longitude: coordinates[1],
@@ -224,6 +227,7 @@
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
                 document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
+                document.getElementById('btn_update_news').addEventListener('click', updateNewsClick, false);
                 document.getElementById('btn_search').addEventListener('click', search, false);
             } else {
                 if (x == '{"LoginUserResult":-1}') {
@@ -329,6 +333,21 @@
     }
     function aboutAuthorsClick() {
         showDiv(about_authors_div)
+    }
+
+    function updateNewsClick() {
+        showDiv(update_news_div);
+        document.getElementById('btn_update').addEventListener('click', update, false);
+    }
+    function update() {
+        send('http://localhost:56989//Ecology.svc/addnews', 'POST', JSON.stringify({
+            Description: document.getElementById('description').value,
+            SituationId: document.getElementById('accident_id_input'),
+            Radius: document.getElementById('radius').value,
+            Relation: document.getElementByName('rad_btn_relation').value
+        }), function (x) {
+            answerDiv.innerHTML = x;
+        })
     }
 
 } )();
