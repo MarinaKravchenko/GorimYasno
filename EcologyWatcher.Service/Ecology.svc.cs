@@ -160,7 +160,7 @@ namespace EcologyWatcher.Service
         public List<Event> Search(DateTime date_from)
         {
             List<Event> list = new List<Event>();
-
+            
             try
             {
                 var temp = db.Accident.Join(db.Accident_Details,
@@ -171,11 +171,12 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].Situation_Name = temp[i].Accident.Situation.Situation_Name;
-                    list[i].Place_Name = temp[i].Accident.Place_Adress;
-                    list[i].Accident_Date = DateTime.Parse(temp[i].Accident_Details.Accident_Date.ToString());
+                    Event e = new Event();
+                    e.Situation_Name = temp[i].Accident.Situation.Situation_Name;
+                    e.Place_Name = temp[i].Accident.Place_Adress;
+                    e.Accident_Date = DateTime.Parse(temp[i].Accident_Details.Accident_Date.ToString());
+                    list.Add(e);
                 }
-
             }
             catch
             {
@@ -259,6 +260,7 @@ namespace EcologyWatcher.Service
                 {
                     var g = Guid.NewGuid().ToString();
                     session.Code = g;
+                    session.User_Id = currentUser.User_Id;
                     db.Session.Add(session);
                     db.SaveChanges();
                     return g;

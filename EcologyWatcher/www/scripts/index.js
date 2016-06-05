@@ -285,6 +285,7 @@
         }), function (x) {
             search_by_time_div_answer.innerHTML = x;
         })
+        answerDiv=''
         showDiv(search_by_time_div_answer);
     }
 
