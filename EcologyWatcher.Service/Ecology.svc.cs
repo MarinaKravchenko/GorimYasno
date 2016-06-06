@@ -50,8 +50,8 @@ namespace EcologyWatcher.Service
             }
             try
             {
+                accident_details.Accident_Date = Convert.ToDateTime(message.Accident_Date);
                 accident_details.Accident_Id = db.Accident.Last().Accident_Id;
-                accident_details.Accident_Date = message.Accident_Date;
                 accident_details.Comments = message.Description;
                 accident_details.Relation_Id = message.Relation;
                 accident_details.Radius = message.Radius;
