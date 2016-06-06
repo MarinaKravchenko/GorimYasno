@@ -224,8 +224,15 @@
             Login: document.getElementById('login').value,
             Password: document.getElementById('password').value
         }), function (x) {
-            if (x != '{"LoginUserResult":null}') {
-                session_key = x.responseText;
+            var temp = JSON.parse(x);
+            session_key = temp.LoginUserResult;
+
+            if (session_key == "Wrong login or password!")
+                answerDiv.innerHTML == "Wrong login or password!";
+            else if ((session_key== "Error!") || (session_key == null))
+                answerDiv.innerHTML == "Error!";
+            else
+            {
                 user = document.getElementById('login').value;
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
@@ -233,12 +240,6 @@
                 document.getElementById('btn_update_news').addEventListener('click', updateNewsClick, false);
                 document.getElementById('btn_search').addEventListener('click', search, false);
                 document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
-            } else {
-                if (x == '{"LoginUserResult":-1}') {
-                    answerDiv.innerHTML = 'Sorry, you are not registred.';
-                } else {
-                    answerDiv.innerHTML = 'Error.';
-                }
             }
         })
     };
@@ -370,17 +371,20 @@
             NewPassword: document.getElementById('new_password_input').value,
             ConfirmedPassword: document.getElementById('new_password_confirm_input').value
         }), function (x) {
-            if (x == 1) {
+            var temp = JSON.parse(x);
+            var result = temp.ChangePasswordResult;
+            if (result == 1) {
                 answerDiv.innerHTML = "Your password has been changed!";
             }
-            else if (x == 2) {
+            else if (result == 2) {
                 answerDiv.innerHTML = "Passwords do not match!";
             }
-            else if (x == 3) {
+            else if (result == 3) {
                 answerDiv.innerHTML = "Wrong password!";
             }
             else
                 answerDiv = "Error!";
+            showDiv(answerDiv);
         })
     };
 
@@ -393,10 +397,13 @@
         send(request, 'POST', JSON.stringify({
             NewEmail: document.getElementById('new_email_input').value
         }), function (x) {
-            if (x == 1)
+            var temp = JSON.parse(x);
+            var result = temp.ChangeEmailResult;
+            if (result == 1)
                 answerDiv.innerHTML = "Your email has been changed!";
             else
                 answerDiv = "Error!";
         })
+        showDiv(answerDiv);
     };
 } )();

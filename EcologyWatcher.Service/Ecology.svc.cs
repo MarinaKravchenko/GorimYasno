@@ -249,24 +249,25 @@ namespace EcologyWatcher.Service
             Session session = new Session();
             try
             {
-                currentUser = db.User_Data.Single(u => ((u.Login == user.Login) && (u.Password_Hash == user.Password)));
-                if (currentUser != null)
+                var currentUser = db.User_Data.Where(u => ((u.Login == user.Login) && (u.Password_Hash == user.Password))).ToList();
+
+                if (currentUser.Count != 0)
                 {
                     var g = Guid.NewGuid().ToString();
                     session.Code = g;
-                    session.User_Id = currentUser.User_Id;
+                    session.User_Id = currentUser.First().User_Id;
                     db.Session.Add(session);
                     db.SaveChanges();
                     return g;
                 }
                 else
                 {
-                    return ("no");
+                    return ("Wrong login or password!");
                 }
             }
             catch 
             {
-                return ("nope");
+                return ("Error!");
             }
         }
 
@@ -311,8 +312,13 @@ namespace EcologyWatcher.Service
         {
             try
             {
-                var user = db.User_Data.Where(u => u.User_Id == db.Session.Single(s => s.Code == session_key).User_Id).First();
-                user.Email = email.NewEmail;
+                var temp = db.Session.Join(db.User_Data,
+                   ss => ss.User_Id,
+                   us => us.User_Id,
+                   (ss, us) => new {Session = ss, User_Data = us})
+                   .Where(s => s.Session.Code == session_key).First();
+
+                temp.User_Data.Email = email.NewEmail;
                 db.SaveChanges();
                 return 1;
             }
@@ -329,13 +335,17 @@ namespace EcologyWatcher.Service
         {
             try
             {
-                var user = db.User_Data.Single(u => u.User_Id == db.Session.Single(s => s.Code == session_key).User_Id);
+                var temp = db.Session.Join(db.User_Data,
+                   ss => ss.User_Id,
+                   us => us.User_Id,
+                   (ss, us) => new { Session = ss, User_Data = us })
+                   .Where(s => s.Session.Code == session_key).First();
 
-                if (user.Password_Hash == password.OldPassword)
+                if (temp.User_Data.Password_Hash == password.OldPassword)
                 {
                     if (password.NewPassword == password.ConfirmedPassword)
                     {
-                        user.Password_Hash = password.NewPassword;
+                        temp.User_Data.Password_Hash = password.NewPassword;
                         db.SaveChanges();
                         return 1;
                     }
