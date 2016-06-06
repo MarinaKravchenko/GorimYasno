@@ -17,7 +17,8 @@
     <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44369</IISExpressSSLPort>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
@@ -98,7 +99,9 @@
     <Compile Include="Actual_Status.cs">
       <DependentUpon>EcoModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\Email.cs" />
     <Compile Include="Data\NewUser.cs" />
+    <Compile Include="Data\Password.cs" />
     <Compile Include="Data\Update.cs" />
     <Compile Include="DTO\Coordinates.cs" />
     <Compile Include="DTO\Geometry.cs" />

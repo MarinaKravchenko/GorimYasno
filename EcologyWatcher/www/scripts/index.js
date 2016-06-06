@@ -20,9 +20,11 @@
     var search_by_geoposition_div = document.getElementById('search_by_geoposition_div');
     var about_programm_div = document.getElementById('about_programm_div');
     var about_authors_div = document.getElementById('about_authors_div');
-   
+    var settings_div = document.getElementById('settings_div');
     var update_news_div = document.getElementById('update_news_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div];
+    var change_password_div = document.getElementById('change_password_div');
+    var change_email_div = document.getElementById('change_email_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div];
    
     var situations = document.getElementById('situations');
     var user;
@@ -213,7 +215,6 @@
         showDiv(signInDiv);
 
         document.getElementById('btn_submit_sign_in').addEventListener('click', signIn, false);
-        
     }
 
     function signIn() {
@@ -222,13 +223,14 @@
             Password: document.getElementById('password').value
         }), function (x) {
             if (x != '{"LoginUserResult":null}') {
-                session_key = x;
+                session_key = x.responseText;
                 user = document.getElementById('login').value;
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
                 document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
                 document.getElementById('btn_update_news').addEventListener('click', updateNewsClick, false);
                 document.getElementById('btn_search').addEventListener('click', search, false);
+                document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
             } else {
                 if (x == '{"LoginUserResult":-1}') {
                     answerDiv.innerHTML = 'Sorry, you are not registred.';
@@ -350,4 +352,50 @@
         })
     }
 
+    function settingsClick() {
+        showDiv(settings_div);
+        document.getElementById('btn_change_password_click').addEventListener('click', changePasswordClick, false);
+        document.getElementById('btn_change_email_click').addEventListener('click', changeEmailClick, false);
+    }
+
+    function changePasswordClick() {
+        showDiv(change_password_div);
+        document.getElementById('btn_update_password').addEventListener('click', changePassword, false);
+    }
+    function changePassword() {
+        var request = 'http://localhost:56989/Ecology.svc/newpassword/' + session_key;
+        send(request, 'POST', JSON.stringify({
+            OldPassword: document.getElementById('old_password_input').value,
+            NewPassword: document.getElementById('new_password_input').value,
+            ConfirmedPassword: document.getElementById('new_password_confirm_input').value
+        }), function (x) {
+            if (x == 1) {
+                answerDiv.innerHTML = "Your password has been changed!";
+            }
+            else if (x == 2) {
+                answerDiv.innerHTML = "Passwords do not match!";
+            }
+            else if (x == 3) {
+                answerDiv.innerHTML = "Wrong password!";
+            }
+            else
+                answerDiv = "Error!";
+        })
+    }
+
+    function changeEmailClick() {
+        showDiv(change_email_div);
+        document.getElementById('btn_update_email').addEventListener('click', changeEmail, false);
+    }
+    function changeEmail(){
+            var request = 'http://localhost:56989/Ecology.svc/newemail/'+session_key.;
+            send(request, 'POST', JSON.stringify({
+                NewEmail: document.getElementById('new_email_input').value
+            }), function (x) {
+                if (x == 1)
+                    answerDiv.innerHTML = "Your email has been changed!";
+                else
+                    answerDiv = "Error!";
+            })
+    }
 } )();
