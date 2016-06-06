@@ -29,6 +29,7 @@
     var situations = document.getElementById('situations');
     var user;
     var coordinates;
+    var place;
     var session_key;
 
     function onDeviceReady() {
@@ -67,6 +68,7 @@
 
         document.getElementById('addressInputText').addEventListener('input', addressPredict, false);
         document.getElementById('check_box_GPS').addEventListener('change', selectGpsOrAddress, false);
+        document.getElementById('check_box_GPS').addEventListener('change', getPosition, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
     };
 
@@ -83,10 +85,10 @@
         coordinates = [];
         var xmlhttp = getXmlHttp();
         var address = document.getElementById('addressInputText').value;
-        var str = address.replace(' ', '');
+        var str = address.replace(/ /g, "");
         var request = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + str +
             '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
-        xmlhttp.open('GET', request, true);
+        xmlhttp.open('GET', request, false);
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
@@ -102,14 +104,14 @@
     function addressByLocation() {
         var xmlhttp = getXmlHttp();
         var request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coordinates[0] + ',' + coordinates[1] + '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
-        xmlhttp.open('GET', request, true);
+        xmlhttp.open('GET', request, false);
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var obj = JSON.parse(xmlhttp.responseText);
                     if (obj.results[0].formatted_address == null) {
-                        return '';
-                    } else return obj.results[0].formatted_address;
+                        place = '';
+                    } else place = obj.results[0].formatted_address;
                 }
             }
         };
@@ -117,17 +119,14 @@
     };
 
     function sendMessage() {
-        var place;
         if (!document.getElementById('check_box_GPS').checked && document.getElementById('addressInputText').value != null) {
                 place = document.getElementById('addressInputText').value;
                 locationByAddress();
         }
         else if (document.getElementById('check_box_GPS').checked) {
-            getPosition(function (coordinates) {
-                place = addressByLocation();
-            })
+                addressByLocation();
         };
-
+        
         var relation;
         if (document.getElementById('rad_like').checked) {
             relation = 1;
@@ -135,8 +134,13 @@
             relation = 2;
         }
         if (document.getElementById('description').value != null && coordinates.length == 2 &&
-            place != null && document.getElementById('radius').value != null && relation != null) {
+            place != null && document.getElementById('radius').value != null &&
+            document.getElementById('date').value != null && relation != null) {
+
+          //  var tmp = new Date((document.getElementById('date').value));
+          //  var date = tmp.getFullYear() + tmp.getMonth() + tmp.getDate() + tmp.getHours() + tmp.getMinutes();
             var temp = document.getElementById('situations');
+
             var request = 'http://localhost:56989//Ecology.svc/addwork/' + session_key;
             send(request, 'POST', JSON.stringify({
                 Description: document.getElementById('description').value,
@@ -144,6 +148,7 @@
                 Longitude: coordinates[1],
                 Latitude: coordinates[0],
                 PlaceName: place,
+                Accident_Date: document.getElementById('date').value,
                 Radius: document.getElementById('radius').value,
                 Relation: relation
             }), function (x) {
@@ -208,7 +213,12 @@
     function getPosition(callback) {
         if (!navigator.geolocation) return;
         navigator.geolocation.getCurrentPosition(function (position) {
-            coordinates = [position.coords.latitude, position.coords.longitude];
+            if (document.getElementById('check_box_GPS').checked) {
+                coordinates = [position.coords.latitude, position.coords.longitude];
+            }
+            else {
+                coordinates = [];
+            }
             callback(coordinates);
         });
     };
