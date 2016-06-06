@@ -28,7 +28,7 @@
    
     var situations = document.getElementById('situations');
     var user;
-    var coordinates = [35, 55];
+    var coordinates;
     var session_key;
 
     function onDeviceReady() {
@@ -59,7 +59,7 @@
             }
         };
         xmlhttp.send(null);
-    }
+    };
 
     function messagePost() {
         answerDiv.innerHTML = '';
@@ -68,36 +68,36 @@
         document.getElementById('addressInputText').addEventListener('input', addressPredict, false);
         document.getElementById('check_box_GPS').addEventListener('change', selectGpsOrAddress, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
-    }
+    };
 
     function selectGpsOrAddress() {
-        if( document.getElementById('check_box_GPS').checked == true ) {
+        if (document.getElementById('check_box_GPS').checked == true) {
             document.getElementById('addressInputText').disabled = true;
         }
         else {
             document.getElementById('addressInputText').disabled = false;
         }
-    }
+    };
 
     function locationByAddress() {
         coordinates = [];
         var xmlhttp = getXmlHttp();
         var address = document.getElementById('addressInputText').value;
-       address = address.replace(' ', '');
-       var request = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address +
-           '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
-       xmlhttp.open('GET', request, true);
-       xmlhttp.onreadystatechange = function () {
-           if (xmlhttp.readyState == 4) {
-               if (xmlhttp.status == 200) {
-                   var obj = JSON.parse(xmlhttp.responseText);
-                   var div = document.getElementById('answerDiv');
-                   coordinates = [obj.results[0].geometry.location.lat, obj.results[0].geometry.location.lng];
-               }
-           }
-       };
-       xmlhttp.send(null);
-    }
+        var str = address.replace(' ', '');
+        var request = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + str +
+            '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
+        xmlhttp.open('GET', request, true);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    var obj = JSON.parse(xmlhttp.responseText);
+                    var div = document.getElementById('answerDiv');
+                    coordinates = [obj.results[0].geometry.location.lat, obj.results[0].geometry.location.lng];
+                }
+            }
+        };
+        xmlhttp.send(null);
+    };
     
     function addressByLocation() {
         var xmlhttp = getXmlHttp();
@@ -107,14 +107,14 @@
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var obj = JSON.parse(xmlhttp.responseText);
-                    if (obj == null) {
+                    if (obj.results[0].formatted_address == null) {
                         return '';
-                    } else return obj.results.formatted_address;
+                    } else return obj.results[0].formatted_address;
                 }
             }
         };
         xmlhttp.send(null);
-    }
+    };
 
     function sendMessage() {
         var place;
@@ -123,9 +123,11 @@
             locationByAddress();
         }
         else if (document.getElementById('check_box_GPS').checked) {
-            getPosition();
-            place = addressByLocation();
-        }
+            getPosition(function (coordinates) {
+                place = addressByLocation();
+            })
+        };
+
         var relation;
         if (document.getElementById('rad_like').checked) {
             relation = 1;
@@ -151,7 +153,7 @@
         else {
             answerDiv.innerHTML = 'Please, check your input.';
         }
-    }
+    };
 
     function send(url, method, data, callback) {
         var xmlHttp = getXmlHttp();
@@ -175,7 +177,7 @@
         xmlHttp.open(method, url, true);
         xmlHttp.setRequestHeader("Content-type", "application/json");
         xmlHttp.send(data);
-    }
+    };
 
   //  function messageGet() {
   //      var xmlhttp = getXmlHttp();
@@ -201,21 +203,21 @@
             }
         }
         return xmlHttp;
-    }
+    };
 
-    function getPosition() {
-        navigator.geolocation.getCurrentPosition(onSuccess);
-    }
-
-    function onSuccess(position) {
-        coordinates = [position.coords.latitude, position.coords.longitude];
-    }
+    function getPosition(callback) {
+        if (!navigator.geolocation) return;
+        navigator.geolocation.getCurrentPosition(function (position) {
+            coordinates = [position.coords.latitude, position.coords.longitude];
+            callback(coordinates);
+        });
+    };
 
     function signInClick() {
         showDiv(signInDiv);
 
         document.getElementById('btn_submit_sign_in').addEventListener('click', signIn, false);
-    }
+    };
 
     function signIn() {
         send('http://localhost:56989/Ecology.svc/login', 'POST', JSON.stringify({
@@ -239,13 +241,12 @@
                 }
             }
         })
-    }
+    };
 
-    function signUpClick()
-    {
+    function signUpClick() {
         showDiv(signUpDiv);
         document.getElementById('btn_submit_sign_up').addEventListener('click', signUp, false);
-    }
+    };
 
     function signUp() {
         if (document.getElementById('login_new').value != '' && document.getElementById('password_new').value != '' &&
@@ -269,7 +270,7 @@
             })
         }
         else answerDiv.innerHTML = 'Please, fill in all fields.';
-    }
+    };
 
     function showDiv(visibleDivName) {
         visibleDivName.hidden = false;
@@ -278,14 +279,14 @@
                 allDivs[i].hidden = true;
             }
         }
-    }
+    };
     
     function search() {
         showDiv(searchDiv);
         document.getElementById('btn_search_by_time_click').addEventListener('click', search_by_time_click, false);
         document.getElementById('btn_search_by_geoposition_click').addEventListener('click', search_by_geoposition_click, false);
         document.getElementById('btn_search_last_ten_click').addEventListener('click', search_last_ten_click, false);
-    }
+    };
 
     function search_last_ten_click() {
         searchDiv.hidden = true;
@@ -300,12 +301,12 @@
         }; x
         xmlhttp.send(null);
         showDiv(search_last_10);
-    }
+    };
     function search_by_time_click() {
         showDiv(search_by_time_div);
         document.getElementById('btn_search_by_time').addEventListener('click', search_by_time, false);
     }
-    function search_by_time(){
+    function search_by_time() {
         send('http://localhost:56989/Ecology.svc/search', 'POST', JSON.stringify({
             Accident_Date: Date(document.getElementById('search_time').value),
         }), function (x) {
@@ -317,30 +318,30 @@
             }
             search_by_time_div_answer.innerHTML = list;
         })
-        answerDiv=''
+        answerDiv = '';
         showDiv(search_by_time_div_answer);
-    }
+    };
 
     function search_by_geoposition_click() {
         showDiv(search_by_geoposition_div);
         document.getElementById('btn_search_by_geoposition').addEventListener('click', search_by_geoposition, false);
-    }
+    };
     function search_by_geoposition() {
 
 
-    }
+    };
 
     function aboutProgrammClick() {
-        showDiv(about_programm_div)
-    }
+        showDiv(about_programm_div);
+    };
     function aboutAuthorsClick() {
-        showDiv(about_authors_div)
-    }
+        showDiv(about_authors_div);
+    };
 
     function updateNewsClick() {
         showDiv(update_news_div);
         document.getElementById('btn_update').addEventListener('click', update, false);
-    }
+    };
     function update() {
         send('http://localhost:56989//Ecology.svc/addnews', 'POST', JSON.stringify({
             Description: document.getElementById('description').value,
@@ -350,18 +351,18 @@
         }), function (x) {
             answerDiv.innerHTML = x;
         })
-    }
+    };
 
     function settingsClick() {
         showDiv(settings_div);
         document.getElementById('btn_change_password_click').addEventListener('click', changePasswordClick, false);
         document.getElementById('btn_change_email_click').addEventListener('click', changeEmailClick, false);
-    }
+    };
 
     function changePasswordClick() {
         showDiv(change_password_div);
         document.getElementById('btn_update_password').addEventListener('click', changePassword, false);
-    }
+    };
     function changePassword() {
         var request = 'http://localhost:56989/Ecology.svc/newpassword/' + session_key;
         send(request, 'POST', JSON.stringify({
@@ -381,21 +382,21 @@
             else
                 answerDiv = "Error!";
         })
-    }
+    };
 
     function changeEmailClick() {
         showDiv(change_email_div);
         document.getElementById('btn_update_email').addEventListener('click', changeEmail, false);
-    }
-    function changeEmail(){
-            var request = 'http://localhost:56989/Ecology.svc/newemail/'+session_key;
-            send(request, 'POST', JSON.stringify({
-                NewEmail: document.getElementById('new_email_input').value
-            }), function (x) {
-                if (x == 1)
-                    answerDiv.innerHTML = "Your email has been changed!";
-                else
-                    answerDiv = "Error!";
-            })
-    }
+    };
+    function changeEmail() {
+        var request = 'http://localhost:56989/Ecology.svc/newemail/' + session_key;
+        send(request, 'POST', JSON.stringify({
+            NewEmail: document.getElementById('new_email_input').value
+        }), function (x) {
+            if (x == 1)
+                answerDiv.innerHTML = "Your email has been changed!";
+            else
+                answerDiv = "Error!";
+        })
+    };
 } )();
