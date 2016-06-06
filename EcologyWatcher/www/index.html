@@ -8,9 +8,9 @@
          font-family:Gabriola; 
          font-size:xx-large
      }
-     
+
      body {
-         background-image: url("../pictures/fon.jpg")
+         background-image: url(../pictures/stars.gif)
      }
 
      div {
@@ -183,6 +183,30 @@
         </p>
     </div>
 
+    <div id="settings_div" hidden="hidden">
+        <button id="btn_change_password_click">Change password</button><br />
+        <button id="btn_change_email_click">Change email</button>
+    </div>
+
+    <div id="change_password_div" hidden="hidden">
+        <p>
+            Please, enter current password:<br/>
+            <input type="password"id="old_password_input" /><br />
+            Please, enter new password:<br />
+            <input type="password" id="new_password_input" /><br />
+            Please, confirm new password:<br />
+            <input type="password" id="new_password_confirm_input" /><br />
+            <button id="btn_update_password">Change</button><br/>
+        </p>
+    </div>
+
+    <div id="change_email_div" hidden="hidden">
+        <p>
+            Please, enter new email:
+            <input type="email" id="new_email_input" inputmode="email" /><br />
+            <button id="btn_update_email">Change</button><br/>
+        </p>
+    </div>
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>

@@ -261,12 +261,12 @@ namespace EcologyWatcher.Service
                 }
                 else
                 {
-                    return null;
+                    return ("no");
                 }
             }
             catch 
             {
-                return null;
+                return ("nope");
             }
         }
 
@@ -302,6 +302,53 @@ namespace EcologyWatcher.Service
             {
                 return -3;
             }
-        }   
+        }
+
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "newemail/{session_key}")]
+        public int ChangeEmail(Email email, string session_key)
+        {
+            try
+            {
+                var user = db.User_Data.Where(u => u.User_Id == db.Session.Single(s => s.Code == session_key).User_Id).First();
+                user.Email = email.NewEmail;
+                db.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "newpassword/{session_key}")]
+        public int ChangePassword(Password password, string session_key)
+        {
+            try
+            {
+                var user = db.User_Data.Single(u => u.User_Id == db.Session.Single(s => s.Code == session_key).User_Id);
+
+                if (user.Password_Hash == password.OldPassword)
+                {
+                    if (password.NewPassword == password.ConfirmedPassword)
+                    {
+                        user.Password_Hash = password.NewPassword;
+                        db.SaveChanges();
+                        return 1;
+                    }
+                    else
+                        return 2;
+                }
+                else
+                    return 3;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
     }
 }
