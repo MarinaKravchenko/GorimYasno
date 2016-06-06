@@ -388,7 +388,7 @@
         document.getElementById('btn_update_email').addEventListener('click', changeEmail, false);
     }
     function changeEmail(){
-            var request = 'http://localhost:56989/Ecology.svc/newemail/'+session_key.;
+            var request = 'http://localhost:56989/Ecology.svc/newemail/'+session_key;
             send(request, 'POST', JSON.stringify({
                 NewEmail: document.getElementById('new_email_input').value
             }), function (x) {
