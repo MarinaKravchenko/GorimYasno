@@ -119,8 +119,8 @@
     function sendMessage() {
         var place;
         if (!document.getElementById('check_box_GPS').checked && document.getElementById('addressInputText').value != null) {
-            place = document.getElementById('addressInputText').value;
-            locationByAddress();
+                place = document.getElementById('addressInputText').value;
+                locationByAddress();
         }
         else if (document.getElementById('check_box_GPS').checked) {
             getPosition(function (coordinates) {
