@@ -74,31 +74,37 @@ namespace EcologyWatcher.Service
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews/{session_key}")]
-        public bool AddNews(Update update, string session_key)
+        public int AddNews(Update update, string session_key)
         {
-            var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id);
-            //var minX = update.Accident_Id.Latitude - message.Radius / 111.3;
-            //var maxX = message.Latitude + message.Radius / 111.3;
-            //var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
-            //var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
-            //
-            //var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
-
             var accident_details = new Accident_Details();
 
             try
             {
-                accident_details.Accident_Date = update.Accident_Date;
-                accident_details.Comments = update.Description;
-                accident_details.Accident_Id = update.Accident_Id;
-                accident_details.Relation_Id = update.Relation;
-                accident_details.Radius = update.Radius;
+                var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id).ToList();
+                //var minX = update.Accident_Id.Latitude - message.Radius / 111.3;
+                //var maxX = message.Latitude + message.Radius / 111.3;
+                //var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
+                //var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
+                //
+                //var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
+                if (accident.Count != 0)
+                {
+                    accident_details.Accident_Date = update.Accident_Date;
+                    accident_details.Comments = update.Description;
+                    accident_details.Accident_Id = update.Accident_Id;
+                    accident_details.Relation_Id = update.Relation;
+                    accident_details.Radius = update.Radius;
+                    return 1;
+                }
+                else
+                {
+                    return 2;
+                }
             }
             catch
             {
-                return false;
+                return -1;
             }
-            return true;
         }
 
         [OperationContract]
@@ -116,39 +122,6 @@ namespace EcologyWatcher.Service
             }
             catch { return true; }
         }
-
-        //[OperationContract]
-        //[WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
-        //    , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
-        //public List<Message> Search (DateTime date_from, int start_from)
-        //{
-        //    List<Message> list = new List<Message>();
-
-        //    try
-        //    {
-        //        var temp = db.Accident.Join(db.Accident_Details, 
-        //            ac => ac.Accident_Id, 
-        //            ad => ad.Accident_Id, 
-        //            (ac, ad) => new { Accident = ac, Accident_Details = ad}).
-        //            Where(a => ((a.Accident_Details.Accident_Date == date_from) && (a.Accident.Accident_Id >= start_from))).ToList();
-
-        //        for (int i = 0; i < temp.Count; i++)
-        //        {
-        //            list[i].Description = temp[i].Accident_Details.Comments;
-        //            list[i].SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
-        //            list[i].Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
-        //            list[i].Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
-        //            list[i].PlaceName = temp[i].Accident.Place_Adress;
-        //            list[i].Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
-        //        }
-
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //    return list;
-        //}
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
@@ -177,13 +150,13 @@ namespace EcologyWatcher.Service
             }
             return list;
         }
-
+        
         [OperationContract]
-        [WebGet(BodyStyle = WebMessageBodyStyle.WrappedResponse,
-            ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchlast10")]
-        public List<Message> Search10()
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped,
+            ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchlast10/{session_key}")]
+        public List<string> Search10(string session_key)
         {
-            List<Message> list = new List<Message>();
+            List<string> list = new List<string>();
 
             try
             {
@@ -195,13 +168,8 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    Message m = new Message();
-                    m.Description = temp[i].Accident_Details.Comments;
-                    m.SituationId = Convert.ToInt32(temp[i].Accident.Situation_Id);
-                    m.Latitude = Convert.ToDouble(temp[i].Accident.Place_Lat);
-                    m.Longitude = Convert.ToDouble(temp[i].Accident.Place_Long);
-                    m.PlaceName = temp[i].Accident.Place_Adress;
-                    m.Radius = Convert.ToDouble(temp[i].Accident_Details.Radius);
+                    string m = String.Format("{0} {1} {2} {3}", temp[i].Accident.Accident_Id, temp[i].Accident.Situation.Situation_Name, temp[i].Accident.Place_Adress, temp[i].Accident_Details.Accident_Date.ToString());
+                    list.Add(m);
                 }
 
             }
@@ -287,21 +255,17 @@ namespace EcologyWatcher.Service
                     temp.Email = user_data.Email;
                     temp.Is_Active = true;
                     temp.Joined_On = DateTime.Now;
-                    try
-                    {
-                        db.User_Data.Add(temp);
-                        db.SaveChanges();
-                    }
-                    catch { return -1; }
-
+                    db.User_Data.Add(temp);
+                    db.SaveChanges();
                     currentUser = temp;
-                    return temp.User_Id;
+                    return 1;
                 }
-                else return -2;
+                else
+                    return 2;
             }
             catch
             {
-                return -3;
+                return -1;
             }
         }
 

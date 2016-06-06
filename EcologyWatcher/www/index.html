@@ -66,6 +66,7 @@
             Password: <br />
             <input type="password" id="password" /><br />
             <button type="submit" id="btn_submit_sign_in">Sign in</button>
+            <button id="btn_back_from_sign_in">Back</button>
         </p>
     </div>
 
@@ -78,6 +79,7 @@
             E-mail: <br />
             <input type="email" id="email_new" /><br />
             <button type="submit" id="btn_submit_sign_up">Sign up</button>
+            <button id="btn_back_from_sign_up">Back</button>
         </p>
     </div>
 
@@ -88,6 +90,7 @@
             <button id="btn_update_news">Update news</button><br />                                                     
             <button id="btn_search">Search info</button><br />
             <button id="btn_settings">Settings</button><br />
+            <button id="btn_back_from_menu">Back</button>
         </p>
     </div>
 
@@ -123,18 +126,19 @@
     <div id="update_news_div" hidden="hidden">
         <p>
             Please, input Accident ID<br />
-            <input id="accident_id_input" inputmode="numeric" /><br />
+            <input id="accident_id_input_update" inputmode="numeric" /><br />
             Approximate radius (metres): <br />
-            <input id="radius" inputmode="numeric" /> <br />
+            <input id="radius_update" inputmode="numeric" /> <br />
             Describe it:<br />
-            <input id="description" /><br />
+            <input id="description_update" /><br />
             When did it happen? <br />
-            <input type="date" id="date" /><br />
-            <input type="radio" id="rad_like" name="rad_btn_relation" value="1">
+            <input type="date" id="date_update" /><br />
+            <input type="radio" id="rad_relation_update" value="1">
             <img src="../pictures/kek.png" /> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            <input type="radio" id="rad_dislike" name="rad_btn_relation" value="2">
+            <input type="radio" id="rad_relation_update" value="2">
             <img src="../pictures/ne-kek.png" /><br />
             <button type="submit" id="btn_update">Update</button>
+            <button id="btn_back_from_update">Back</button><br />
         </p>
     </div>
 
@@ -146,6 +150,7 @@
             <button id="btn_search_by_time_click">Search by time</button><br />
             <button id="btn_search_by_geoposition_click">Search by geoposition</button><br />
             <button id="btn_search_last_ten_click">Search last ten</button><br />
+            <button id="btn_back_from_search">Back</button><br />       
         </p>
     </div>
 
@@ -174,18 +179,20 @@
         <p>
             The main idea of EcologyWatcher is to help users to get involved in protection of the Earth. Everyone can post a message about some ecological disasters as well as learn information about others.
         </p>
-
+        <button id="btn_back_from_about_programm">Back</button>
     </div>
 
     <div id="about_authors_div"hidden="hidden">
         <p>
             This application was created by the second year students of Higher School of Economics Kravchenko Marina and Trofimenko Anastasia. We also want to express our gratitude to our research manager Gomenuk Kirill Sergeevich for the idea and help in programming part.
         </p>
+        <button id="btn_back_from_about_authors">Back</button>
     </div>
 
     <div id="settings_div" hidden="hidden">
         <button id="btn_change_password_click">Change password</button><br />
-        <button id="btn_change_email_click">Change email</button>
+        <button id="btn_change_email_click">Change email</button><br/>
+        <button id="btn_back_from_settings">Back</button>
     </div>
 
     <div id="change_password_div" hidden="hidden">
@@ -207,6 +214,8 @@
             <button id="btn_update_email">Change</button><br/>
         </p>
     </div>
+
+    
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>

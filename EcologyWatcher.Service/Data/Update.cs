@@ -12,7 +12,7 @@ namespace EcologyWatcher.Service.Data
         [DataMember]
         public int Accident_Id { get; set; }
         [DataMember]
-        public int Radius { get; set; }
+        public double Radius { get; set; }
         [DataMember]
         public string Description { get; set; }
         [DataMember]
