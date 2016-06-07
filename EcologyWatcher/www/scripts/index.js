@@ -34,6 +34,7 @@
     var coordinates;
     var place;
     var session_key;
+    var kek;
 
     function onDeviceReady() {
         answerDiv.hidden = true;
@@ -127,40 +128,45 @@
 
     function sendMessage() {
         if (!document.getElementById('check_box_GPS').checked && document.getElementById('addressInputText').value != null) {
-                place = document.getElementById('addressInputText').value;
-                locationByAddress();
+            place = document.getElementById('addressInputText').value;
+            locationByAddress();
         }
         else if (document.getElementById('check_box_GPS').checked) {
-                addressByLocation();
+            addressByLocation();
         };
-        
+
         var relation;
         if (document.getElementById('rad_like').checked) {
             relation = 1;
         } else if (document.getElementById('rad_dislike').checked) {
             relation = 2;
         }
-        if (document.getElementById('description').value != null && coordinates.length == 2 &&
-            place != null && document.getElementById('radius').value != null &&
-            document.getElementById('date').value != null && relation != null) {
+        if (coordinates.length == 2 && place != null && document.getElementById('radius').value != null &&
+            document.getElementById('date').value != "" && relation != null) {
 
-          //  var tmp = new Date((document.getElementById('date').value));
-          //  var date = tmp.getFullYear() + tmp.getMonth() + tmp.getDate() + tmp.getHours() + tmp.getMinutes();
-            var temp = document.getElementById('situations').value;
-
+            var temp = document.getElementById('situations');
             var request = 'http://localhost:56989//Ecology.svc/addwork/' + session_key;
             send(request, 'POST', JSON.stringify({
                 Description: document.getElementById('description').value,
-                SituationId: parseInt(situations.value),
+                SituationId: situations.selectedIndex,
                 Longitude: coordinates[1],
                 Latitude: coordinates[0],
                 PlaceName: place,
-                Accident_Date: Date.parse(document.getElementById('date').value),
-                ActualStatus: parseInt(relevance.value),
-                Radius: parseFloat(document.getElementById('radius').value),
+                Accident_Date: document.getElementById('date').value,
+                ActualStatus: relevance.selectedIndex,
+                Radius: document.getElementById('radius').value,
                 Relation: relation
             }), function (x) {
-                answerDiv.innerHTML = x;
+                var obj = JSON.parse(x);
+                if (obj.NewMessageResult > 0) {
+                    showDiv(buttonsDiv);
+                    answerDiv.innerHTML = 'Thank you for your message!';
+                }
+                else if (obj.NewMessageResult < 0) {
+                    answerDiv.innerHTML = 'Sorry, your message was not added correctly. Please, try again.';
+                } else {
+                    answerDiv.innerHTML = 'Error.';
+                }
             })
         }
         else {
