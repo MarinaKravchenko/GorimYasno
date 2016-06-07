@@ -30,45 +30,48 @@ namespace EcologyWatcher.Service
             ResponseFormat = WebMessageFormat.Json, UriTemplate = "addwork/{session_key}")]
         public int NewMessage(Message message, string session_key)
         {
-            var accident = new Accident();
-            var accident_details = new Accident_Details();
-            var session = db.Session.Where(s => s.Code == session_key).First();
             try
             {
-                accident.Status_Id = 1;
-                accident.User_Id = session.User_Id;
-                accident.Situation_Id = message.SituationId + 1;
-                accident.Place_Lat = message.Latitude;
-                accident.Place_Long = message.Longitude;
-                accident.Place_Adress = message.PlaceName;
-                db.Accident.Add(accident);
-                db.SaveChanges();
-            }
-            catch
-            {
-                return -5;
-            }
-            try
-            {
-                accident_details.Accident_Date = Convert.ToDateTime(message.Accident_Date);
-                accident_details.Accident_Id = db.Accident.Last().Accident_Id;
-                accident_details.Comments = message.Description;
-                accident_details.Relation_Id = message.Relation;
-                accident_details.Radius = message.Radius;
-                db.Accident_Details.Add(accident_details);
-                db.SaveChanges();
-            }
-            catch
-            {
-                return -4;
-            }
+                var accident = new Accident();
+                var accident_details = new Accident_Details();
+                var session = db.Session.Where(s => s.Code == session_key).First();
+                try
+                {
+                    accident.Status_Id = 1;
+                    accident.User_Id = session.User_Id;
+                    accident.Situation_Id = message.SituationId + 1;
+                    accident.Place_Lat = message.Latitude;
+                    accident.Place_Long = message.Longitude;
+                    accident.Place_Adress = message.PlaceName;
+                    db.Accident.Add(accident);
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    return -1;
+                }
+                try
+                {
+                    accident_details.Accident_Date = Convert.ToDateTime(message.Accident_Date);
+                    accident_details.Accident_Id = accident.Accident_Id;
+                    accident_details.Comments = message.Description;
+                    accident_details.Relation_Id = message.Relation;
+                    accident_details.Radius = message.Radius;
+                    db.Accident_Details.Add(accident_details);
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    return -1;
+                }
 
-            if (accident.Accident_Id > 0)
-            {
-                return accident.Accident_Id;
+                if (accident.Accident_Id > 0)
+                {
+                    return accident.Accident_Id;
+                }
+                else return -1;
             }
-
-            return -3;
+            catch { return -2; }
         }
 
         [OperationContract]
