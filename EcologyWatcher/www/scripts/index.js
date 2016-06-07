@@ -24,9 +24,12 @@
     var update_news_div = document.getElementById('update_news_div');
     var change_password_div = document.getElementById('change_password_div');
     var change_email_div = document.getElementById('change_email_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div];
+    var update_menu_div = document.getElementById('update_menu_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div, update_menu_div];
    
     var situations = document.getElementById('situations');
+    var relevance = document.getElementById('relevance');
+    var relevance_update = document.getElementById('relevance_update');
     var user;
     var coordinates;
     var place;
@@ -143,17 +146,18 @@
 
           //  var tmp = new Date((document.getElementById('date').value));
           //  var date = tmp.getFullYear() + tmp.getMonth() + tmp.getDate() + tmp.getHours() + tmp.getMinutes();
-            var temp = document.getElementById('situations');
+            var temp = document.getElementById('situations').value;
 
             var request = 'http://localhost:56989//Ecology.svc/addwork/' + session_key;
             send(request, 'POST', JSON.stringify({
                 Description: document.getElementById('description').value,
-                SituationId: situations.selectedIndex,
+                SituationId: parseInt(situations.value),
                 Longitude: coordinates[1],
                 Latitude: coordinates[0],
                 PlaceName: place,
-                Accident_Date: document.getElementById('date').value,
-                Radius: document.getElementById('radius').value,
+                Accident_Date: Date.parse(document.getElementById('date').value),
+                ActualStatus: parseInt(relevance.value),
+                Radius: parseFloat(document.getElementById('radius').value),
                 Relation: relation
             }), function (x) {
                 answerDiv.innerHTML = x;
@@ -310,7 +314,7 @@
         document.getElementById('btn_search_by_time_click').addEventListener('click', search_by_time_click, false);
         document.getElementById('btn_search_by_geoposition_click').addEventListener('click', search_by_geoposition_click, false);
         document.getElementById('btn_search_last_ten_click').addEventListener('click', search_last_ten_click, false);
-        document.getElementById('btn_back_from_search').addEventListener('click', showDiv(buttonsDiv), false);
+        document.getElementById('btn_back_from_search').addEventListener('click', mainWindow, false);
     };
 
     function search_last_ten_click() {
@@ -375,20 +379,27 @@
         document.getElementById('btn_back_from_about_authors').addEventListener('click', onDeviceReady, false);
     };
 
-    function updateNewsClick() {
+    function updateMenuClick() {
+        answerDiv.hidden = true;
+        showDiv(update_menu_div);
+        document.getElementById('btn_update_news').addEventListener('click', updateClick, false);
+        document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevance, false);
+    };
+    function updateClick() {
         answerDiv.hidden = true;
         showDiv(update_news_div);
         document.getElementById('btn_update').addEventListener('click', update, false);
+        document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
     };
-
     function update() {
         var request = 'http://localhost:56989/Ecology.svc/addnews/' + session_key;
         send(request, 'POST', JSON.stringify({
-            Accident_Id: parseInt(document.getElementById('accident_id_input_update').value),
-            Radius: parseFloat(document.getElementById('radius_update').value),
+            Accident_Id: Int(document.getElementById('accident_id_input_update').value),
+            Radius: Float(document.getElementById('radius_update').value),
             Description: document.getElementById('description_update').value,
-            Accident_Date: Date.parse(document.getElementById('date_update').value),
-            Relation: parseInt(document.getElementById('rad_relation_update').value)
+            Accident_Date: Date(document.getElementById('date_update').value),
+            ActualStatus: Int(relevance_update.value),
+            Relation: Int(document.getElementById('rad_relation_update').value)
         }), function (x) {
             var temp = JSON.parse(x);
             var result = temp.AddNewsResult;
@@ -396,12 +407,10 @@
             {
                 answerDiv.innerHTML = 'Thank you for update!';
             }
-            else if (result == 2)
-            {
+            else if (result == 2) {
                 answerDiv.innerHTML = 'Such accident does not exist in the database!';
             }
-            else
-            {
+            else {
                 answerDiv.innerHTML = 'Error!';
             }
         })
@@ -469,7 +478,7 @@
         answerDiv.hidden = false;
         showDiv(buttonsDiv);
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-        document.getElementById('btn_update_news').addEventListener('click', updateNewsClick, false);
+        document.getElementById('btn_update_menu').addEventListener('click', updateMenuClick, false);
         document.getElementById('btn_search').addEventListener('click', search, false);
         document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
         document.getElementById('btn_back_from_menu').addEventListener('click', onDeviceReady, false);

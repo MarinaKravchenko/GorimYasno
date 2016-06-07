@@ -25,6 +25,8 @@ namespace EcologyWatcher.Service.DTO
         public double Radius { get; set; }
         [DataMember]
         public int Relation { get; set; }
+        [DataMember]
+        public int ActualStatus { get; set; }
         //[DataMember]
         // public byte[] Picture { get; set; }
     }

@@ -87,7 +87,7 @@
         <p>            
             Choose option:<br /><br />
             <button id="btn_post_message">New message</button><br />
-            <button id="btn_update_news">Update news</button><br />                                                     
+            <button id="btn_update_menu">Update news</button><br />                                                     
             <button id="btn_search">Search info</button><br />
             <button id="btn_settings">Settings</button><br />
             <button id="btn_back_from_menu">Back</button>
@@ -98,11 +98,11 @@
         <p>
             Please, choose your situation:<br />
             <select id="situations">
-                <option value="Fire">Fire</option>
-                <option value="Smoke">Smoke</option>
-                <option value="Flood">Flood</option>
-                <option value="Rubbish">Rubbish</option>
-                <option value="Oilspill">Oil spill</option>
+                <option value="1">Fire</option>
+                <option value="2">Smoke</option>
+                <option value="3">Flood</option>
+                <option value="4">Rubbish</option>
+                <option value="5">Oil spill</option>
             </select><br />
             Approximate radius (metres): <br />
             <input id="radius" inputmode="numeric"/> <br />
@@ -110,6 +110,13 @@
             <input id="description" /><br />
             When did it happen? <br />
             <input type="datetime-local" id="date" /><br />
+            Choose relevance:<br />
+            <select id="relevance">
+                <option value="1">Important</option>
+                <option value="2">Normal</option>
+                <option value="3">Non-important</option>
+                <option value="4">Not relevant</option>
+            </select><br />
             <input type="checkbox" id="check_box_GPS">Use my current coordinates<br />
             or enter adress:<br />
             <input list="addressInput" id="addressInputText"/> <br />
@@ -123,6 +130,10 @@
             </p>
     </div>
 
+    <div id="update_menu_div" hidden="hidden">
+        <button id="btn_update_news">New update</button>
+        <button id="btn_change_relevance_click">Change relevance</button>
+    </div>
     <div id="update_news_div" hidden="hidden">
         <p>
             Please, input Accident ID<br />
@@ -133,13 +144,22 @@
             <input id="description_update" /><br />
             When did it happen? <br />
             <input type="date" id="date_update" /><br />
-            <input type="radio" id="rad_relation_update" value="1">
-            <img src="../pictures/kek.png" /> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            <input type="radio" id="rad_relation_update" value="2">
-            <img src="../pictures/ne-kek.png" /><br />
-            <button type="submit" id="btn_update">Update</button>
-            <button id="btn_back_from_update">Back</button><br />
-        </p>
+            Choose relevance:<br />
+            <select id="relevance_update">
+                <option value="1">Important</option>
+                <option value="2">Normal</option>
+                <option value="3">Non-important</option>
+                <option value="4">Not relevant</option>
+            </select><br />
+                <input type="radio" id="rad_relation_update" value="1">
+                <img src="../pictures/kek.png" /> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                <input type="radio" id="rad_relation_update" value="2">
+                <img src="../pictures/ne-kek.png" />
+                <br />
+                <button type="submit" id="btn_update">Update</button>
+                <button id="btn_back_from_update">Back</button>
+                <br />
+</p>
     </div>
 
     <div id="answerDiv"></div>
