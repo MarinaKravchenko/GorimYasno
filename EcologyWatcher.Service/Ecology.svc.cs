@@ -37,7 +37,7 @@ namespace EcologyWatcher.Service
                 var session = db.Session.Where(s => s.Code == session_key).First();
                 try
                 {
-                    accident.Status_Id = message.ActualStatus + 1;
+                    accident.Status_Id = 1;
                     accident.User_Id = session.User_Id;
                     accident.Situation_Id = message.SituationId + 1;
                     accident.Place_Lat = message.Latitude;
@@ -75,8 +75,8 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
-            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
         public int AddNews(Update update)
         {
             var accident_details = new Accident_Details();
@@ -84,13 +84,7 @@ namespace EcologyWatcher.Service
             try
             {
                 var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id).ToList();
-                //var minX = update.Accident_Id.Latitude - message.Radius / 111.3;
-                //var maxX = message.Latitude + message.Radius / 111.3;
-                //var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
-                //var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
-                //
-                //var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
-                if (accident.Count != 0)
+               if (accident.Count != 0)
                 {
                     accident_details.Accident_Date = update.Accident_Date;
                     accident_details.Comments = update.Description;
@@ -184,15 +178,15 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchgeo")]
-        public List<string> SearchGeo(GeoInfo msg)
+        public List<Message> SearchGeo(string text, double position_lat, double position_long, double radius)
         {
-            List<string> list = new List<string>();
-            var minX = msg.Position_Lat - msg.Radius / 111.3;
-            var maxX = msg.Position_Lat + msg.Radius / 111.3;
-            var minY = msg.Position_Long - msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
-            var maxY = msg.Position_Long + msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
+            List<Message> list = new List<Message>();
+            var minX = position_lat - radius / 111.3;
+            var maxX = position_lat + radius / 111.3;
+            var minY = position_long - radius / (111.3 * Math.Cos(position_lat));
+            var maxY = position_long + radius / (111.3 * Math.Cos(position_lat));
 
             try
             {
@@ -200,12 +194,15 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    Situation s = db.Situation.Single<Situation>(sit => sit.Situation_Id == temp[i].Situation_Id);
-                    string str = String.Format("{0} {1} {2} {3}", s.Situation_Name, Convert.ToDouble(temp[i].Place_Lat), Convert.ToDouble(temp[i].Place_Long), temp[i].Place_Adress);
-                    list.Add(str);
+                    list[i].SituationId = Convert.ToInt32(temp[i].Situation_Id);
+                    list[i].Latitude = Convert.ToDouble(temp[i].Place_Lat);
+                    list[i].Longitude = Convert.ToDouble(temp[i].Place_Long);
+                    list[i].PlaceName = temp[i].Place_Adress;
                 }
+
             }
-            catch { return null; }
+            catch { }
+
             return list;
         }
 

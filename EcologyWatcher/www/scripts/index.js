@@ -444,14 +444,14 @@
     };
 
     function update() {
-        var request = 'http://localhost:56989//Ecology.svc/addnews';
+        var request = 'http://localhost:56989/Ecology.svc/addnews';
         send(request, 'POST', JSON.stringify({
             Accident_Id: Int(document.getElementById('accident_id_input_update').value),
             Radius: Float(document.getElementById('radius_update').value),
             Description: String(document.getElementById('description_update').value),
             Accident_Date: Date(document.getElementById('date_update').value),
             Relation: Int(document.getElementById('rad_relation_update').value),
-            ActualStatus: Int(document.getElementById('relevance_update').value),
+            ActualStatus: Int(document.getElementById('relevance_update').value)
         }), function (x) {
             var temp = JSON.parse(x);
             var result = temp.AddNewsResult;
