@@ -84,19 +84,16 @@ namespace EcologyWatcher.Service
             try
             {
                 var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id).ToList();
-                //var minX = update.Accident_Id.Latitude - message.Radius / 111.3;
-                //var maxX = message.Latitude + message.Radius / 111.3;
-                //var minY = message.Longitude - message.Radius / (111.3 * Math.Cos(message.Latitude));
-                //var maxY = message.Longitude + message.Radius / (111.3 * Math.Cos(message.Latitude));
-                //
-                //var accident = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).Last();
                 if (accident.Count != 0)
                 {
-                    accident_details.Accident_Date = update.Accident_Date;
+                    accident_details.Accident_Date = Convert.ToDateTime(update.Accident_Date);
                     accident_details.Comments = update.Description;
                     accident_details.Accident_Id = update.Accident_Id;
                     accident_details.Relation_Id = update.Relation;
                     accident_details.Radius = update.Radius;
+                    db.Accident_Details.Add(accident_details);
+                    db.SaveChanges();
+
                     return 1;
                 }
                 else
@@ -188,25 +185,25 @@ namespace EcologyWatcher.Service
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchgeo")]
         public List<string> SearchGeo(GeoInfo msg)
         {
-            List<string> list = new List<string>();
-            var minX = msg.Position_Lat - msg.Radius / 111.3;
-            var maxX = msg.Position_Lat + msg.Radius / 111.3;
-            var minY = msg.Position_Long - msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
-            var maxY = msg.Position_Long + msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
-
             try
             {
-                var temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
+                List<string> list = new List<string>();
+                double minX = msg.Position_Lat - msg.Radius / 111.3;
+                double maxX = msg.Position_Lat + msg.Radius / 111.3;
+                double minY = msg.Position_Long - msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
+                double maxY = msg.Position_Long + msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
+
+                List<Accident> temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    Situation s = db.Situation.Single<Situation>(sit => sit.Situation_Id == temp[i].Situation_Id);
+                    Situation s = db.Situation.Where(sit => sit.Situation_Id == temp[i].Situation_Id).ToList().First();
                     string str = String.Format("{0} {1} {2} {3}", s.Situation_Name, Convert.ToDouble(temp[i].Place_Lat), Convert.ToDouble(temp[i].Place_Long), temp[i].Place_Adress);
                     list.Add(str);
                 }
+                return list;
             }
             catch { return null; }
-            return list;
         }
 
         [OperationContract]
