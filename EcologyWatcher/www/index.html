@@ -128,6 +128,7 @@
             <input type="radio" id="rad_dislike" name="rad_btn_relation" value="2">
                 <img src="../ne-kek.png"/><br/>
             <button type="submit" id="btn_submit">Post</button>
+            <button id="btn_back_from_new_message">Back</button>
             </p>
     </div>
 
@@ -188,9 +189,12 @@
     
     <div id="search_by_geoposition_div" hidden="hidden">
         <p>
-             Please, input address <br />
-            <input  id="address_search_input" /><br />
-            <button id="btn_search_by_geoposition">Search</button><br />
+            <input type="checkbox" id="check_box_GPS2">Use my current coordinates<br />
+            or enter adress:<br />
+            <input list="address_search" id="address_search_input" /> <br />
+            <datalist id="address_search"></datalist>
+            <button id="btn_search_by_geoposition">Search</button>
+            <button id="btn_back_from_search_geo">Back</button> <br />
         </p>
     </div>
     <div id="search_by_time_div_answer" hidden="hidden">

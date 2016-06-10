@@ -35,7 +35,9 @@
     var coordinates;
     var place;
     var session_key;
-    var kek;
+    var tempCheckBox;
+    var tempInput;
+    var tempDataList;
 
     function onDeviceReady() {
         answerDiv.hidden = true;
@@ -50,7 +52,7 @@
     };
 
     function addressPredict() {
-        var input = document.getElementById('addressInputText').value;
+        var input = document.getElementById(tempInput).value;
         var xmlhttp = getXmlHttp();
         var request = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + input +
             '&types=address&language=en&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
@@ -64,7 +66,7 @@
                     for (var i = 0; i < mas.length; i++) {
                         str += '<option value="' + mas[i].description + '" />';
                     }
-                    document.getElementById('addressInput').innerHTML = str;
+                    document.getElementById(tempDataList).innerHTML = str;
                 }
             }
         };
@@ -74,26 +76,30 @@
     function messagePost() {
         answerDiv.innerHTML = '';
         showDiv(newMessageDiv);
+        tempCheckBox = 'check_box_GPS';
+        tempInput = 'addressInputText';
+        tempDataList = 'addressInput';
 
         document.getElementById('addressInputText').addEventListener('input', addressPredict, false);
         document.getElementById('check_box_GPS').addEventListener('change', selectGpsOrAddress, false);
         document.getElementById('check_box_GPS').addEventListener('change', getPosition, false);
         document.getElementById('btn_submit').addEventListener('click', sendMessage, false);
+        document.getElementById('btn_back_from_new_message').addEventListener('click', mainWindow, false);
     };
 
     function selectGpsOrAddress() {
-        if (document.getElementById('check_box_GPS').checked == true) {
-            document.getElementById('addressInputText').disabled = true;
+        if (document.getElementById(tempCheckBox).checked == true) {
+            document.getElementById(tempInput).disabled = true;
         }
         else {
-            document.getElementById('addressInputText').disabled = false;
+            document.getElementById(tempInput).disabled = false;
         }
     };
 
     function locationByAddress() {
         coordinates = [];
         var xmlhttp = getXmlHttp();
-        var address = document.getElementById('addressInputText').value;
+        var address = document.getElementById(tempInput).value;
         var str = address.replace(/ /g, "");
         var request = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + str +
             '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
@@ -102,7 +108,6 @@
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var obj = JSON.parse(xmlhttp.responseText);
-                    var div = document.getElementById('answerDiv');
                     coordinates = [obj.results[0].geometry.location.lat, obj.results[0].geometry.location.lng];
                 }
             }
@@ -128,11 +133,11 @@
     };
 
     function sendMessage() {
-        if (!document.getElementById('check_box_GPS').checked && document.getElementById('addressInputText').value != null) {
-            place = document.getElementById('addressInputText').value;
+        if (!document.getElementById(tempCheckBox).checked && document.getElementById(tempInput).value != null) {
+            place = document.getElementById(tempInput).value;
             locationByAddress();
         }
-        else if (document.getElementById('check_box_GPS').checked) {
+        else if (document.getElementById(tempCheckBox).checked) {
             addressByLocation();
         };
 
@@ -146,7 +151,7 @@
             document.getElementById('date').value != "" && relation != null) {
 
             var temp = document.getElementById('situations');
-            var request = 'http://localhost:56989//Ecology.svc/addwork/' + session_key;
+            var request = 'http://localhost:56989/Ecology.svc/addwork/' + session_key;
             send(request, 'POST', JSON.stringify({
                 Description: document.getElementById('description').value,
                 SituationId: situations.selectedIndex,
@@ -154,9 +159,9 @@
                 Latitude: coordinates[0],
                 PlaceName: place,
                 Accident_Date: document.getElementById('date').value,
-                ActualStatus: relevance.selectedIndex,
                 Radius: document.getElementById('radius').value,
-                Relation: relation
+                Relation: relation,
+                ActualStatus: relevance.selectedIndex
             }), function (x) {
                 var obj = JSON.parse(x);
                 if (obj.NewMessageResult > 0) {
@@ -228,7 +233,7 @@
     function getPosition(callback) {
         if (!navigator.geolocation) return;
         navigator.geolocation.getCurrentPosition(function (position) {
-            if (document.getElementById('check_box_GPS').checked) {
+            if (document.getElementById(tempCheckBox).checked) {
                 coordinates = [position.coords.latitude, position.coords.longitude];
             }
             else {
@@ -366,12 +371,50 @@
 
     function search_by_geoposition_click() {
         showDiv(search_by_geoposition_div);
+        tempCheckBox = 'check_box_GPS2';
+        tempInput = 'address_search_input';
+        tempDataList = 'address_search';
+
         document.getElementById('btn_search_by_geoposition').addEventListener('click', search_by_geoposition, false);
+        document.getElementById('btn_back_from_search_geo').addEventListener('click', search, false);
+        document.getElementById(tempInput).addEventListener('input', addressPredict, false);
+        document.getElementById(tempCheckBox).addEventListener('change', selectGpsOrAddress, false);
+        document.getElementById(tempCheckBox).addEventListener('change', getPosition, false);
     };
 
     function search_by_geoposition() {
-
-
+        if (!document.getElementById(tempCheckBox).checked && document.getElementById(tempInput).value != null) {
+            place = document.getElementById(tempInput).value;
+            locationByAddress();
+        } else if (document.getElementById(tempCheckBox).checked) {
+            addressByLocation();
+        };
+        if (coordinates.length == 2 && place != null) {
+            var request = 'http://localhost:56989/Ecology.svc/searchgeo';
+            send(request, 'POST', JSON.stringify({
+                Position_Lat: coordinates[0],
+                Position_Long: coordinates[1],
+                Address: place,
+                Radius: 10
+            }), function (_x) {
+                var obj = JSON.parse(_x);
+                if (obj.SearchGeoResult != null) {
+                    var list = [];
+                    for (var i = 0; i < obj.SearchGeoResult.length; i++) {
+                        list.push(obj.SearchGeoResult[i]);
+                        list.push('<br>');
+                    }
+                    answerDiv.innerHTML = list.reduce(function (s, x) {
+                        return s + x;
+                    }, "");
+                    showDiv('none');
+                } else {
+                    answerDiv.innerHTML = 'Sorry, there are no accidents there.';
+                }
+            });
+        } else {
+            answerDiv.innerHTML = 'Error';
+        }
     };
 
     function aboutProgrammClick() {
