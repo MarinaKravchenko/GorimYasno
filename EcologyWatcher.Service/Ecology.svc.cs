@@ -155,7 +155,7 @@ namespace EcologyWatcher.Service
         }
         
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped,
+        [WebGet(BodyStyle = WebMessageBodyStyle.Wrapped,
             ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchlast10/{session_key}")]
         public List<string> Search10(string session_key)
         {
@@ -326,6 +326,14 @@ namespace EcologyWatcher.Service
             {
                 return 0;
             }
+        }
+
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "newrelevance/{session_key}")]
+        public int ChangePassword(RelevanceUpdate update, string session_key)
+        {
+            return 1;
         }
     }
 }
