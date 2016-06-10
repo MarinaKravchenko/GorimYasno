@@ -26,7 +26,8 @@
     var change_email_div = document.getElementById('change_email_div');
     var update_menu_div = document.getElementById('update_menu_div');
     var update_news_div = document.getElementById('update_news_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div, update_menu_div, update_news_div];
+    var change_relevance_div = document.getElementById('change_relevance_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div, update_menu_div, update_news_div, change_relevance_div];
    
     var situations = document.getElementById('situations');
     var relevance = document.getElementById('relevance');
@@ -146,7 +147,7 @@
             document.getElementById('date').value != "" && relation != null) {
 
             var temp = document.getElementById('situations');
-            var request = 'http://localhost:56989//Ecology.svc/addwork/' + session_key;
+            var request = 'http://localhost:56989/Ecology.svc/addwork/' + session_key;
             send(request, 'POST', JSON.stringify({
                 Description: document.getElementById('description').value,
                 SituationId: situations.selectedIndex,
@@ -388,8 +389,8 @@
         answerDiv.hidden = true;
         showDiv(update_menu_div);
         document.getElementById('btn_update_news').addEventListener('click', updateClick, false);
-        document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevance, false);
-        document.getElementById('btn_back_from_change_relevance_click').addEventListener('click', changeRelevance, false);
+        document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevanceClick, false);
+        document.getElementById('btn_back_from_change_relevance_click').addEventListener('click', mainWindow, false);
     };
 
     function updateClick() {
@@ -400,14 +401,14 @@
     };
 
     function update() {
-        var request = 'http://localhost:56989/Ecology.svc/addnews/' + session_key;
+        var request = 'http://localhost:56989//Ecology.svc/addnews';
         send(request, 'POST', JSON.stringify({
             Accident_Id: Int(document.getElementById('accident_id_input_update').value),
             Radius: Float(document.getElementById('radius_update').value),
-            Description: document.getElementById('description_update').value,
+            Description: String(document.getElementById('description_update').value),
             Accident_Date: Date(document.getElementById('date_update').value),
-            ActualStatus: Int(relevance_update.value),
-            Relation: Int(document.getElementById('rad_relation_update').value)
+            Relation: Int(document.getElementById('rad_relation_update').value),
+            ActualStatus: Int(document.getElementById('relevance_update').value),
         }), function (x) {
             var temp = JSON.parse(x);
             var result = temp.AddNewsResult;
@@ -458,6 +459,7 @@
             else
                 answerDiv = "Error!";
             showDiv(answerDiv);
+            document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
         })
     };
 
@@ -479,10 +481,29 @@
                 answerDiv = "Error!";
         })
         showDiv(answerDiv);
+        document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
     };
 
-    function changeRelevance() {
+    function changeRelevanceClick() {
+        showDiv(change_relevance_div);
+        document.getElementById('btn_update_relevance').addEventListener('click', changeRelevance, false);
+    }
 
+    function changeRelevance() {
+        var request = 'http://localhost:56989/Ecology.svc/newrelevance/' + session_key;
+        send(request, 'POST', JSON.stringify({
+            AccidentId: document.getElementById('relevance_accident_id_input').value,
+            Relevance: document.getElementById('relevance_update').value
+        }), function (x) {
+            var temp = JSON.parse(x);
+            var result = temp.ChangeRelevanceResult;
+            if (result == 1)
+                answerDiv.innerHTML = "Relevance has been changed!";
+            else
+                answerDiv = "Error!";
+        })
+        answerDiv.hidden = false;
+        document.getElementById('btn_back_from_relevance').addEventListener('click', mainWindow, false);
     }
 
     function mainWindow() {

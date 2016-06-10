@@ -10,7 +10,7 @@ namespace EcologyWatcher.Service.Data
     public class RelevanceUpdate
     {
         [DataMember]
-        public int AccidentID { get; set; }
+        public int AccidentId { get; set; }
 
         [DataMember]
         public int Relevance { get; set; }
