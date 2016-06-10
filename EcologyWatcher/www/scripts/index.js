@@ -260,9 +260,9 @@
             session_key = temp.LoginUserResult;
 
             if (session_key == "Wrong login or password!")
-                answerDiv.innerHTML == "Wrong login or password!";
+                answerDiv.innerHTML = "Wrong login or password!";
             else if ((session_key== "Error!") || (session_key == null))
-                answerDiv.innerHTML == "Error!";
+                answerDiv.innerHTML = "Error!";
             else
             {
                 user = document.getElementById('login').value;
@@ -322,6 +322,7 @@
     };
     
     function search() {
+        answerDiv.innerHTML = '';
         showDiv(searchDiv);
         document.getElementById('btn_search_by_time_click').addEventListener('click', search_by_time_click, false);
         document.getElementById('btn_search_by_geoposition_click').addEventListener('click', search_by_geoposition_click, false);
@@ -345,11 +346,14 @@
             });
 
         showDiv(search_last_10);
+        answerDiv.innerHTML = '<button id="back_from_search10">Back</button>';
+        document.getElementById('back_from_search10').addEventListener('click', search, false);
     };
 
     function search_by_time_click() {
         showDiv(search_by_time_div);
         document.getElementById('btn_search_by_time').addEventListener('click', search_by_time, false);
+        document.getElementById('back_from_search_by_time').addEventListener('click', search, false);
     }
 
     function search_by_time() {
@@ -477,6 +481,7 @@
     };
 
     function settingsClick() {
+        answerDiv = '';
         showDiv(settings_div);
         document.getElementById('btn_change_password_click').addEventListener('click', changePasswordClick, false);
         document.getElementById('btn_change_email_click').addEventListener('click', changeEmailClick, false);
@@ -486,6 +491,7 @@
     function changePasswordClick() {
         showDiv(change_password_div);
         document.getElementById('btn_update_password').addEventListener('click', changePassword, false);
+        document.getElementById('btn_back_from_upd_password').addEventListener('click', settingsClick, false);
     };
 
     function changePassword() {
@@ -515,6 +521,7 @@
     function changeEmailClick() {
         showDiv(change_email_div);
         document.getElementById('btn_update_email').addEventListener('click', changeEmail, false);
+        document.getElementById('btn_back_from_upd_email').addEventListener('click', settingsClick, false);
     };
 
     function changeEmail() {
