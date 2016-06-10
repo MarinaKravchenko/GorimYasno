@@ -197,7 +197,7 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    string str = String.Format("{0}: {1} ({2})", temp[i].Situation.Situation_Name, temp[i].Place_Adress, temp[i].Accident_Details.Last());
+                    string str = String.Format("{0} {1}: {2} ({3})",temp[i].Accident_Id , temp[i].Situation.Situation_Name, temp[i].Place_Adress, temp[i].Accident_Details.Last().Accident_Date.ToString());
                     list.Add(str);
                 }
                 return list;
