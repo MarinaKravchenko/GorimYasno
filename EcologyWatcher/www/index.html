@@ -134,9 +134,10 @@
 
     <div id="update_menu_div" hidden="hidden">
         <button id="btn_update_news">New update</button><br/>
-        <button id="btn_change_relevance_click">Change relevance</button>
+        <button id="btn_change_relevance_click">Change relevance</button><br/>
         <button id="btn_back_from_change_relevance_click">Back</button>
     </div>
+
     <div id="update_news_div" hidden="hidden">
         <p>
             Please, input Accident ID<br />
@@ -146,14 +147,7 @@
             Describe it:<br />
             <input id="description_update" /><br />
             When did it happen? <br />
-            <input type="date" id="date_update" /><br />
-            Choose relevance:<br />
-            <select id="relevance_update">
-                <option value="1">Important</option>
-                <option value="2">Normal</option>
-                <option value="3">Non-important</option>
-                <option value="4">Not relevant</option>
-            </select><br />
+            <input type="datetime-local" id="date_update" /><br />
                 <input type="radio" id="rad_relation_update" value="1">
                 <img src="../pictures/kek.png" /> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                 <input type="radio" id="rad_relation_update" value="2">
@@ -241,7 +235,23 @@
         </p>
     </div>
 
-    
+    <div id="change_relevance_div" hidden="hidden">
+        <p>
+            Please, enter Accident ID:<br />
+            <input type="number" id="relevance_accident_id_input" inputmode="numeric" /><br />
+            Choose relevance:<br />
+            <select id="relevance_update">
+                <option value="1">Important</option>
+                <option value="2">Normal</option>
+                <option value="3">Non-important</option>
+                <option value="4">Not relevant</option>
+            </select><br />
+            <button id="btn_update_relevance">Change</button><br />
+            <button id="btn_back_from_relevance">Back</button><br />
+        </p>
+    </div>
+
+    <button id="btn_back_from_everywhere" hidden="hidden">Back</button>
 
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>

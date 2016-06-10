@@ -76,8 +76,8 @@ namespace EcologyWatcher.Service
 
         [OperationContract]
         [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
-            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews/{session_key}")]
-        public int AddNews(Update update, string session_key)
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
+        public int AddNews(Update update)
         {
             var accident_details = new Accident_Details();
 
@@ -330,7 +330,17 @@ namespace EcologyWatcher.Service
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "newrelevance/{session_key}")]
         public int ChangeRelevance(RelevanceUpdate update, string session_key)
         {
-            return 1;
+            try
+            {
+                var accident = db.Accident.Where(a => a.Accident_Id == update.AccidentId).First();
+                accident.Status_Id = update.Relevance;
+                db.SaveChanges();
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
     }
 }
