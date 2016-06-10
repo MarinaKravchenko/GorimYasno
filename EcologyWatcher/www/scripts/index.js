@@ -205,19 +205,6 @@
         xmlHttp.send(data);
     };
 
-  //  function messageGet() {
-  //      var xmlhttp = getXmlHttp();
-    //      xmlhttp.open('GET', 'http://localhost:56989/Ecology.svc/work/Hello!', true);
-  //      xmlhttp.onreadystatechange = function () {
-  //          if (xmlhttp.readyState == 4) {
-  //              if (xmlhttp.status == 200) {
-  //                  answerDiv.innerHTML = xmlhttp.responseText;
-  //              }
-  //          }
-  //      };x
-  //      xmlhttp.send(null);
-  //  }
-
     function getXmlHttp() {
         var xmlHttp;
         try { xmlHttp = new XMLHttpRequest(); }
@@ -366,11 +353,12 @@
                 list.push(obj.SearchResult[i]);
                 list.push('<br>');
             }
-            search_by_time_div_answer.innerHTML = list;
-        })
-        answerDiv = '';
-        showDiv(search_by_time_div_answer);
-    };
+            search_by_time_div_answer.innerHTML = list.reduce(function (s, x) {
+                return s + x;
+            }, "");
+            answerDiv = '';
+            showDiv(search_by_time_div_answer);
+        });
 
     function search_by_geoposition_click() {
         showDiv(search_by_geoposition_div);
@@ -481,7 +469,7 @@
     };
 
     function settingsClick() {
-        answerDiv = '';
+        answerDiv.innerHTML = '';
         showDiv(settings_div);
         document.getElementById('btn_change_password_click').addEventListener('click', changePasswordClick, false);
         document.getElementById('btn_change_email_click').addEventListener('click', changeEmailClick, false);
