@@ -37,7 +37,7 @@ namespace EcologyWatcher.Service
                 var session = db.Session.Where(s => s.Code == session_key).First();
                 try
                 {
-                    accident.Status_Id = 1;
+                    accident.Status_Id = message.ActualStatus + 1;
                     accident.User_Id = session.User_Id;
                     accident.Situation_Id = message.SituationId + 1;
                     accident.Place_Lat = message.Latitude;
@@ -75,8 +75,8 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
+            , ResponseFormat = WebMessageFormat.Json, UriTemplate = "addnews")]
         public int AddNews(Update update)
         {
             var accident_details = new Accident_Details();
@@ -84,13 +84,16 @@ namespace EcologyWatcher.Service
             try
             {
                 var accident = db.Accident.Where(a => a.Accident_Id == update.Accident_Id).ToList();
-               if (accident.Count != 0)
+                if (accident.Count != 0)
                 {
-                    accident_details.Accident_Date = update.Accident_Date;
+                    accident_details.Accident_Date = Convert.ToDateTime(update.Accident_Date);
                     accident_details.Comments = update.Description;
                     accident_details.Accident_Id = update.Accident_Id;
                     accident_details.Relation_Id = update.Relation;
                     accident_details.Radius = update.Radius;
+                    db.Accident_Details.Add(accident_details);
+                    db.SaveChanges();
+
                     return 1;
                 }
                 else
@@ -178,32 +181,29 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
             , ResponseFormat = WebMessageFormat.Json, UriTemplate = "searchgeo")]
-        public List<Message> SearchGeo(string text, double position_lat, double position_long, double radius)
+        public List<string> SearchGeo(GeoInfo msg)
         {
-            List<Message> list = new List<Message>();
-            var minX = position_lat - radius / 111.3;
-            var maxX = position_lat + radius / 111.3;
-            var minY = position_long - radius / (111.3 * Math.Cos(position_lat));
-            var maxY = position_long + radius / (111.3 * Math.Cos(position_lat));
-
             try
             {
-                var temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
+                List<string> list = new List<string>();
+                double minX = msg.Position_Lat - msg.Radius / 111.3;
+                double maxX = msg.Position_Lat + msg.Radius / 111.3;
+                double minY = msg.Position_Long - msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
+                double maxY = msg.Position_Long + msg.Radius / (111.3 * Math.Cos(msg.Position_Lat));
+
+                List<Accident> temp = db.Accident.Where(a => (a.Place_Lat >= minX) && (a.Place_Lat <= maxX) && (a.Place_Long >= minY) && (a.Place_Long <= maxY)).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    list[i].SituationId = Convert.ToInt32(temp[i].Situation_Id);
-                    list[i].Latitude = Convert.ToDouble(temp[i].Place_Lat);
-                    list[i].Longitude = Convert.ToDouble(temp[i].Place_Long);
-                    list[i].PlaceName = temp[i].Place_Adress;
+                    Situation s = db.Situation.Where(sit => sit.Situation_Id == temp[i].Situation_Id).ToList().First();
+                    string str = String.Format("{0} {1} {2} {3}", s.Situation_Name, Convert.ToDouble(temp[i].Place_Lat), Convert.ToDouble(temp[i].Place_Long), temp[i].Place_Adress);
+                    list.Add(str);
                 }
-
+                return list;
             }
-            catch { }
-
-            return list;
+            catch { return null; }
         }
 
         [OperationContract]

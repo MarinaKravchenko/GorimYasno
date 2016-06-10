@@ -41,7 +41,7 @@
     var tempDataList;
 
     function onDeviceReady() {
-        answerDiv.hidden = true;
+        answerDiv.innerHTML = '';
         coordinates = null;
         user = null;
         session_key = 0;
@@ -267,7 +267,6 @@
             {
                 user = document.getElementById('login').value;
                 answerDiv.innerHTML = 'Welcome, ' + user;
-                answerDiv.hidden = false;
                 showDiv(buttonsDiv);
                 document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
                 document.getElementById('btn_update_menu').addEventListener('click', updateNewsClick, false);
@@ -314,7 +313,6 @@
     };
 
     function showDiv(visibleDivName) {
-        answerDiv.hidden = true;
         visibleDivName.hidden = false;
         for (var i = 0; i < allDivs.length; i++) {
             if (visibleDivName != allDivs[i]) {
@@ -396,7 +394,7 @@
                 Position_Lat: coordinates[0],
                 Position_Long: coordinates[1],
                 Address: place,
-                Radius: 10
+                Radius: 1
             }), function (_x) {
                 var obj = JSON.parse(_x);
                 if (obj.SearchGeoResult != null) {
@@ -429,7 +427,7 @@
     };
 
     function updateNewsClick() {
-        answerDiv.hidden = true;
+        answerDiv.innerHTML = '';
         showDiv(update_menu_div);
         document.getElementById('btn_update_news').addEventListener('click', updateClick, false);
         document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevanceClick, false);
@@ -437,21 +435,30 @@
     };
 
     function updateClick() {
-        answerDiv.hidden = true;
+        answerDiv.innerHTML = '';
         showDiv(update_news_div);
         document.getElementById('btn_update').addEventListener('click', update, false);
         document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
     };
 
     function update() {
-        var request = 'http://localhost:56989/Ecology.svc/addnews';
+        var acc_id = document.getElementById('accident_id_input_update').value;
+        var rad = document.getElementById('radius_update').value;
+        var desc = document.getElementById('description_update').value;
+        var dat = document.getElementById('date_update').value;
+        var rel;
+        if (document.getElementById('rad_like_update').checked) {
+            rel = 1;
+        } else if (document.getElementById('rad_dislike_update').checked) {
+            rel = 2;
+        }
+        var request = 'http://localhost:56989//Ecology.svc/addnews';
         send(request, 'POST', JSON.stringify({
-            Accident_Id: Int(document.getElementById('accident_id_input_update').value),
-            Radius: Float(document.getElementById('radius_update').value),
-            Description: String(document.getElementById('description_update').value),
-            Accident_Date: Date(document.getElementById('date_update').value),
-            Relation: Int(document.getElementById('rad_relation_update').value),
-            ActualStatus: Int(document.getElementById('relevance_update').value)
+            Accident_Id: acc_id,
+            Radius: rad,
+            Description: desc,
+            Accident_Date: dat,
+            Relation: rel
         }), function (x) {
             var temp = JSON.parse(x);
             var result = temp.AddNewsResult;
@@ -501,7 +508,6 @@
             }
             else
                 answerDiv = "Error!";
-            showDiv(answerDiv);
             document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
         })
     };
@@ -523,7 +529,6 @@
             else
                 answerDiv = "Error!";
         })
-        showDiv(answerDiv);
         document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
     };
 
@@ -545,13 +550,11 @@
             else
                 answerDiv = "Error!";
         })
-        answerDiv.hidden = false;
         document.getElementById('btn_back_from_relevance').addEventListener('click', mainWindow, false);
     }
 
     function mainWindow() {
         answerDiv.innerHTML = 'Welcome, ' + user;
-        answerDiv.hidden = false;
         showDiv(buttonsDiv);
         document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
         document.getElementById('btn_update_menu').addEventListener('click', updateMenuClick, false);

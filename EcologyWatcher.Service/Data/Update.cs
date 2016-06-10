@@ -16,7 +16,7 @@ namespace EcologyWatcher.Service.Data
         [DataMember]
         public string Description { get; set; }
         [DataMember]
-        public DateTime Accident_Date { get; set; }
+        public string Accident_Date { get; set; }
         [DataMember]
         public int Relation { get; set; }
     }
