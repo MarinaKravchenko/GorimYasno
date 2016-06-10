@@ -287,6 +287,7 @@
                 else if (result == 1)
                 {
                     showDiv(signInDiv);
+                    answerDiv.innerHTML = 'Registered, now you need to sign in.';
                     document.getElementById('btn_submit_sign_in').addEventListener('click', signIn, false);
                     document.getElementById('btn_back_from_sign_in').addEventListener('click', onDeviceReady, false);
                 }
@@ -465,7 +466,6 @@
                 answerDiv.innerHTML = 'Error!';
             }
         })
-        document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
     };
 
     function settingsClick() {
@@ -524,12 +524,12 @@
             else
                 answerDiv = "Error!";
         })
-        document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
     };
 
     function changeRelevanceClick() {
         showDiv(change_relevance_div);
         document.getElementById('btn_update_relevance').addEventListener('click', changeRelevance, false);
+        document.getElementById('btn_back_from_relevance').addEventListener('click', mainWindow, false);
     }
 
     function changeRelevance() {
@@ -545,7 +545,6 @@
             else
                 answerDiv = "Error!";
         })
-        document.getElementById('btn_back_from_relevance').addEventListener('click', mainWindow, false);
     }
 
     function mainWindow() {
