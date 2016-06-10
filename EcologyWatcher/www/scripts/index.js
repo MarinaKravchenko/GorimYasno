@@ -5,7 +5,7 @@
 (function () {
     "use strict";
 
-    document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
+    document.addEventListener('deviceready', onDeviceReady.bind(this), false);
 
     var startDiv = document.getElementById('startDiv');
     var signInDiv = document.getElementById('signInDiv');
@@ -28,7 +28,7 @@
     var update_news_div = document.getElementById('update_news_div');
     var change_relevance_div = document.getElementById('change_relevance_div');
     var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div, update_menu_div, update_news_div, change_relevance_div];
-   
+
     var situations = document.getElementById('situations');
     var relevance = document.getElementById('relevance');
     var relevance_update = document.getElementById('relevance_update');
@@ -115,7 +115,7 @@
         };
         xmlhttp.send(null);
     };
-    
+
     function addressByLocation() {
         var xmlhttp = getXmlHttp();
         var request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coordinates[0] + ',' + coordinates[1] + '&key=AIzaSyA5u_V-AjoMQPWLoRE3lNQXcb-AWDxGUf4';
@@ -248,10 +248,9 @@
 
             if (session_key == "Wrong login or password!")
                 answerDiv.innerHTML = "Wrong login or password!";
-            else if ((session_key== "Error!") || (session_key == null))
+            else if ((session_key == "Error!") || (session_key == null))
                 answerDiv.innerHTML = "Error!";
-            else
-            {
+            else {
                 user = document.getElementById('login').value;
                 answerDiv.innerHTML = 'Welcome, ' + user;
                 showDiv(buttonsDiv);
@@ -259,7 +258,7 @@
                 document.getElementById('btn_update_menu').addEventListener('click', updateNewsClick, false);
                 document.getElementById('btn_search').addEventListener('click', search, false);
                 document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
-                document.getElementById('btn_back_from_menu').addEventListener('click', onDeviceReady, false);       
+                document.getElementById('btn_back_from_menu').addEventListener('click', onDeviceReady, false);
             }
         })
     };
@@ -280,18 +279,15 @@
             }), function (x) {
                 var temp = JSON.parse(x);
                 var result = temp.CreateNewUserResult;
-                if (result == 2)
-                {
+                if (result == 2) {
                     answerDiv.innerHTML = 'Sorry, this login already exists.';
                 }
-                else if (result == 1)
-                {
+                else if (result == 1) {
                     showDiv(signInDiv);
                     document.getElementById('btn_submit_sign_in').addEventListener('click', signIn, false);
                     document.getElementById('btn_back_from_sign_in').addEventListener('click', onDeviceReady, false);
                 }
-                else 
-                {
+                else {
                     answerDiv.innerHTML = 'Error!';
                 }
             })
@@ -307,7 +303,7 @@
             }
         }
     };
-    
+
     function search() {
         answerDiv.innerHTML = '';
         showDiv(searchDiv);
@@ -360,201 +356,201 @@
             showDiv(search_by_time_div_answer);
         });
 
-    function search_by_geoposition_click() {
-        showDiv(search_by_geoposition_div);
-        tempCheckBox = 'check_box_GPS2';
-        tempInput = 'address_search_input';
-        tempDataList = 'address_search';
+        function search_by_geoposition_click() {
+            showDiv(search_by_geoposition_div);
+            tempCheckBox = 'check_box_GPS2';
+            tempInput = 'address_search_input';
+            tempDataList = 'address_search';
 
-        document.getElementById('btn_search_by_geoposition').addEventListener('click', search_by_geoposition, false);
-        document.getElementById('btn_back_from_search_geo').addEventListener('click', search, false);
-        document.getElementById(tempInput).addEventListener('input', addressPredict, false);
-        document.getElementById(tempCheckBox).addEventListener('change', selectGpsOrAddress, false);
-        document.getElementById(tempCheckBox).addEventListener('change', getPosition, false);
-    };
-
-    function search_by_geoposition() {
-        if (!document.getElementById(tempCheckBox).checked && document.getElementById(tempInput).value != null) {
-            place = document.getElementById(tempInput).value;
-            locationByAddress();
-        } else if (document.getElementById(tempCheckBox).checked) {
-            addressByLocation();
+            document.getElementById('btn_search_by_geoposition').addEventListener('click', search_by_geoposition, false);
+            document.getElementById('btn_back_from_search_geo').addEventListener('click', search, false);
+            document.getElementById(tempInput).addEventListener('input', addressPredict, false);
+            document.getElementById(tempCheckBox).addEventListener('change', selectGpsOrAddress, false);
+            document.getElementById(tempCheckBox).addEventListener('change', getPosition, false);
         };
-        if (coordinates.length == 2 && place != null) {
-            var request = 'http://localhost:56989/Ecology.svc/searchgeo';
-            send(request, 'POST', JSON.stringify({
-                Position_Lat: coordinates[0],
-                Position_Long: coordinates[1],
-                Address: place,
-                Radius: 1
-            }), function (_x) {
-                var obj = JSON.parse(_x);
-                if (obj.SearchGeoResult != null) {
-                    var list = [];
-                    for (var i = 0; i < obj.SearchGeoResult.length; i++) {
-                        list.push(obj.SearchGeoResult[i]);
-                        list.push('<br>');
+
+        function search_by_geoposition() {
+            if (!document.getElementById(tempCheckBox).checked && document.getElementById(tempInput).value != null) {
+                place = document.getElementById(tempInput).value;
+                locationByAddress();
+            } else if (document.getElementById(tempCheckBox).checked) {
+                addressByLocation();
+            };
+            if (coordinates.length == 2 && place != null) {
+                var request = 'http://localhost:56989/Ecology.svc/searchgeo';
+                send(request, 'POST', JSON.stringify({
+                    Position_Lat: coordinates[0],
+                    Position_Long: coordinates[1],
+                    Address: place,
+                    Radius: 1
+                }), function (_x) {
+                    var obj = JSON.parse(_x);
+                    if (obj.SearchGeoResult != null) {
+                        var list = [];
+                        for (var i = 0; i < obj.SearchGeoResult.length; i++) {
+                            list.push(obj.SearchGeoResult[i]);
+                            list.push('<br>');
+                        }
+                        answerDiv.innerHTML = list.reduce(function (s, x) {
+                            return s + x;
+                        }, "");
+                        showDiv('none');
+                    } else {
+                        answerDiv.innerHTML = 'Sorry, there are no accidents there.';
                     }
-                    answerDiv.innerHTML = list.reduce(function (s, x) {
-                        return s + x;
-                    }, "");
-                    showDiv('none');
-                } else {
-                    answerDiv.innerHTML = 'Sorry, there are no accidents there.';
+                });
+            } else {
+                answerDiv.innerHTML = 'Error';
+            }
+        };
+
+        function aboutProgrammClick() {
+            showDiv(about_programm_div);
+            document.getElementById('btn_back_from_about_programm').addEventListener('click', onDeviceReady, false);
+        };
+
+        function aboutAuthorsClick() {
+            showDiv(about_authors_div);
+            document.getElementById('btn_back_from_about_authors').addEventListener('click', onDeviceReady, false);
+        };
+
+        function updateNewsClick() {
+            answerDiv.innerHTML = '';
+            showDiv(update_menu_div);
+            document.getElementById('btn_update_news').addEventListener('click', updateClick, false);
+            document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevanceClick, false);
+            document.getElementById('btn_back_from_change_relevance_click').addEventListener('click', mainWindow, false);
+        };
+
+        function updateClick() {
+            answerDiv.innerHTML = '';
+            showDiv(update_news_div);
+            document.getElementById('btn_update').addEventListener('click', update, false);
+            document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
+        };
+
+        function update() {
+            var acc_id = document.getElementById('accident_id_input_update').value;
+            var rad = document.getElementById('radius_update').value;
+            var desc = document.getElementById('description_update').value;
+            var dat = document.getElementById('date_update').value;
+            var rel;
+            if (document.getElementById('rad_like_update').checked) {
+                rel = 1;
+            } else if (document.getElementById('rad_dislike_update').checked) {
+                rel = 2;
+            }
+            var request = 'http://localhost:56989//Ecology.svc/addnews';
+            send(request, 'POST', JSON.stringify({
+                Accident_Id: acc_id,
+                Radius: rad,
+                Description: desc,
+                Accident_Date: dat,
+                Relation: rel
+            }), function (x) {
+                var temp = JSON.parse(x);
+                var result = temp.AddNewsResult;
+                if (result == 1) {
+                    answerDiv.innerHTML = 'Thank you for update!';
                 }
-            });
-        } else {
-            answerDiv.innerHTML = 'Error';
-        }
-    };
+                else if (result == 2) {
+                    answerDiv.innerHTML = 'Such accident does not exist in the database!';
+                }
+                else {
+                    answerDiv.innerHTML = 'Error!';
+                }
+            })
+            document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
+        };
 
-    function aboutProgrammClick() {
-        showDiv(about_programm_div);
-        document.getElementById('btn_back_from_about_programm').addEventListener('click', onDeviceReady, false);
-    };
+        function settingsClick() {
+            answerDiv.innerHTML = '';
+            showDiv(settings_div);
+            document.getElementById('btn_change_password_click').addEventListener('click', changePasswordClick, false);
+            document.getElementById('btn_change_email_click').addEventListener('click', changeEmailClick, false);
+            document.getElementById('btn_back_from_settings').addEventListener('click', mainWindow, false);
+        };
 
-    function aboutAuthorsClick() {
-        showDiv(about_authors_div);
-        document.getElementById('btn_back_from_about_authors').addEventListener('click', onDeviceReady, false);
-    };
+        function changePasswordClick() {
+            showDiv(change_password_div);
+            document.getElementById('btn_update_password').addEventListener('click', changePassword, false);
+            document.getElementById('btn_back_from_upd_password').addEventListener('click', settingsClick, false);
+        };
 
-    function updateNewsClick() {
-        answerDiv.innerHTML = '';
-        showDiv(update_menu_div);
-        document.getElementById('btn_update_news').addEventListener('click', updateClick, false);
-        document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevanceClick, false);
-        document.getElementById('btn_back_from_change_relevance_click').addEventListener('click', mainWindow, false);
-    };
+        function changePassword() {
+            var request = 'http://localhost:56989/Ecology.svc/newpassword/' + session_key;
+            send(request, 'POST', JSON.stringify({
+                OldPassword: document.getElementById('old_password_input').value,
+                NewPassword: document.getElementById('new_password_input').value,
+                ConfirmedPassword: document.getElementById('new_password_confirm_input').value
+            }), function (x) {
+                var temp = JSON.parse(x);
+                var result = temp.ChangePasswordResult;
+                if (result == 1) {
+                    answerDiv.innerHTML = "Your password has been changed!";
+                }
+                else if (result == 2) {
+                    answerDiv.innerHTML = "Passwords do not match!";
+                }
+                else if (result == 3) {
+                    answerDiv.innerHTML = "Wrong password!";
+                }
+                else
+                    answerDiv = "Error!";
+                document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
+            })
+        };
 
-    function updateClick() {
-        answerDiv.innerHTML = '';
-        showDiv(update_news_div);
-        document.getElementById('btn_update').addEventListener('click', update, false);
-        document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
-    };
+        function changeEmailClick() {
+            showDiv(change_email_div);
+            document.getElementById('btn_update_email').addEventListener('click', changeEmail, false);
+            document.getElementById('btn_back_from_upd_email').addEventListener('click', settingsClick, false);
+        };
 
-    function update() {
-        var acc_id = document.getElementById('accident_id_input_update').value;
-        var rad = document.getElementById('radius_update').value;
-        var desc = document.getElementById('description_update').value;
-        var dat = document.getElementById('date_update').value;
-        var rel;
-        if (document.getElementById('rad_like_update').checked) {
-            rel = 1;
-        } else if (document.getElementById('rad_dislike_update').checked) {
-            rel = 2;
-        }
-        var request = 'http://localhost:56989//Ecology.svc/addnews';
-        send(request, 'POST', JSON.stringify({
-            Accident_Id: acc_id,
-            Radius: rad,
-            Description: desc,
-            Accident_Date: dat,
-            Relation: rel
-        }), function (x) {
-            var temp = JSON.parse(x);
-            var result = temp.AddNewsResult;
-            if (result == 1)
-            {
-                answerDiv.innerHTML = 'Thank you for update!';
-            }
-            else if (result == 2) {
-                answerDiv.innerHTML = 'Such accident does not exist in the database!';
-            }
-            else {
-                answerDiv.innerHTML = 'Error!';
-            }
-        })
-        document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
-    };
-
-    function settingsClick() {
-        answerDiv.innerHTML = '';
-        showDiv(settings_div);
-        document.getElementById('btn_change_password_click').addEventListener('click', changePasswordClick, false);
-        document.getElementById('btn_change_email_click').addEventListener('click', changeEmailClick, false);
-        document.getElementById('btn_back_from_settings').addEventListener('click', mainWindow, false);
-    };
-
-    function changePasswordClick() {
-        showDiv(change_password_div);
-        document.getElementById('btn_update_password').addEventListener('click', changePassword, false);
-        document.getElementById('btn_back_from_upd_password').addEventListener('click', settingsClick, false);
-    };
-
-    function changePassword() {
-        var request = 'http://localhost:56989/Ecology.svc/newpassword/' + session_key;
-        send(request, 'POST', JSON.stringify({
-            OldPassword: document.getElementById('old_password_input').value,
-            NewPassword: document.getElementById('new_password_input').value,
-            ConfirmedPassword: document.getElementById('new_password_confirm_input').value
-        }), function (x) {
-            var temp = JSON.parse(x);
-            var result = temp.ChangePasswordResult;
-            if (result == 1) {
-                answerDiv.innerHTML = "Your password has been changed!";
-            }
-            else if (result == 2) {
-                answerDiv.innerHTML = "Passwords do not match!";
-            }
-            else if (result == 3) {
-                answerDiv.innerHTML = "Wrong password!";
-            }
-            else
-                answerDiv = "Error!";
+        function changeEmail() {
+            var request = 'http://localhost:56989/Ecology.svc/newemail/' + session_key;
+            send(request, 'POST', JSON.stringify({
+                NewEmail: document.getElementById('new_email_input').value
+            }), function (x) {
+                var temp = JSON.parse(x);
+                var result = temp.ChangeEmailResult;
+                if (result == 1)
+                    answerDiv.innerHTML = "Your email has been changed!";
+                else
+                    answerDiv = "Error!";
+            })
             document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
-        })
-    };
+        };
 
-    function changeEmailClick() {
-        showDiv(change_email_div);
-        document.getElementById('btn_update_email').addEventListener('click', changeEmail, false);
-        document.getElementById('btn_back_from_upd_email').addEventListener('click', settingsClick, false);
-    };
+        function changeRelevanceClick() {
+            showDiv(change_relevance_div);
+            document.getElementById('btn_update_relevance').addEventListener('click', changeRelevance, false);
+        }
 
-    function changeEmail() {
-        var request = 'http://localhost:56989/Ecology.svc/newemail/' + session_key;
-        send(request, 'POST', JSON.stringify({
-            NewEmail: document.getElementById('new_email_input').value
-        }), function (x) {
-            var temp = JSON.parse(x);
-            var result = temp.ChangeEmailResult;
-            if (result == 1)
-                answerDiv.innerHTML = "Your email has been changed!";
-            else
-                answerDiv = "Error!";
-        })
-        document.getElementById('btn_back_from_everywhere').addEventListener('click', mainWindow, false);
-    };
+        function changeRelevance() {
+            var request = 'http://localhost:56989/Ecology.svc/newrelevance/' + session_key;
+            send(request, 'POST', JSON.stringify({
+                AccidentId: document.getElementById('relevance_accident_id_input').value,
+                Relevance: document.getElementById('relevance_update').value
+            }), function (x) {
+                var temp = JSON.parse(x);
+                var result = temp.ChangeRelevanceResult;
+                if (result == 1)
+                    answerDiv.innerHTML = "Relevance has been changed!";
+                else
+                    answerDiv = "Error!";
+            })
+            document.getElementById('btn_back_from_relevance').addEventListener('click', mainWindow, false);
+        }
 
-    function changeRelevanceClick() {
-        showDiv(change_relevance_div);
-        document.getElementById('btn_update_relevance').addEventListener('click', changeRelevance, false);
+        function mainWindow() {
+            answerDiv.innerHTML = 'Welcome, ' + user;
+            showDiv(buttonsDiv);
+            document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
+            document.getElementById('btn_update_menu').addEventListener('click', updateMenuClick, false);
+            document.getElementById('btn_search').addEventListener('click', search, false);
+            document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
+            document.getElementById('btn_back_from_menu').addEventListener('click', onDeviceReady, false);
+        }
     }
-
-    function changeRelevance() {
-        var request = 'http://localhost:56989/Ecology.svc/newrelevance/' + session_key;
-        send(request, 'POST', JSON.stringify({
-            AccidentId: document.getElementById('relevance_accident_id_input').value,
-            Relevance: document.getElementById('relevance_update').value
-        }), function (x) {
-            var temp = JSON.parse(x);
-            var result = temp.ChangeRelevanceResult;
-            if (result == 1)
-                answerDiv.innerHTML = "Relevance has been changed!";
-            else
-                answerDiv = "Error!";
-        })
-        document.getElementById('btn_back_from_relevance').addEventListener('click', mainWindow, false);
-    }
-
-    function mainWindow() {
-        answerDiv.innerHTML = 'Welcome, ' + user;
-        showDiv(buttonsDiv);
-        document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-        document.getElementById('btn_update_menu').addEventListener('click', updateMenuClick, false);
-        document.getElementById('btn_search').addEventListener('click', search, false);
-        document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
-        document.getElementById('btn_back_from_menu').addEventListener('click', onDeviceReady, false);
-    }
-} )();
+});
