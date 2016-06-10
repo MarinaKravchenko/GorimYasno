@@ -25,7 +25,8 @@
     var change_password_div = document.getElementById('change_password_div');
     var change_email_div = document.getElementById('change_email_div');
     var update_menu_div = document.getElementById('update_menu_div');
-    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div, update_menu_div];
+    var update_news_div = document.getElementById('update_news_div');
+    var allDivs = [startDiv, signUpDiv, signInDiv, buttonsDiv, newMessageDiv, searchDiv, search_by_time_div, search_last_10, search_by_time_div_answer, search_by_geoposition_div, about_programm_div, about_authors_div, update_news_div, settings_div, change_password_div, change_email_div, update_menu_div, update_news_div];
    
     var situations = document.getElementById('situations');
     var relevance = document.getElementById('relevance');
@@ -263,7 +264,7 @@
                 answerDiv.hidden = false;
                 showDiv(buttonsDiv);
                 document.getElementById('btn_post_message').addEventListener('click', messagePost, false);
-                document.getElementById('btn_update_news').addEventListener('click', updateNewsClick, false);
+                document.getElementById('btn_update_menu').addEventListener('click', updateNewsClick, false);
                 document.getElementById('btn_search').addEventListener('click', search, false);
                 document.getElementById('btn_settings').addEventListener('click', settingsClick, false);
                 document.getElementById('btn_back_from_menu').addEventListener('click', onDeviceReady, false);       
@@ -307,6 +308,7 @@
     };
 
     function showDiv(visibleDivName) {
+        answerDiv.hidden = true;
         visibleDivName.hidden = false;
         for (var i = 0; i < allDivs.length; i++) {
             if (visibleDivName != allDivs[i]) {
@@ -324,23 +326,20 @@
     };
 
     function search_last_ten_click() {
-        var xmlhttp = getXmlHttp();
-        var request = 'http://localhost:56989/Ecology.svc/searchlast10/' + session_key;
-        xmlhttp.open('GET', request, true);
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4) {
-                if (xmlhttp.status == 200) {
-                    var obj = JSON.parse(x);
-                    var list = [];
-                    for (var i = 0; i < obj.SearchResult.length; i++) {
-                        list.push(obj.SearchResult[i]);
-                        list.push('<br>');
-                    }
-                    search_last_10_div.innerHTML = list;
+        send('http://localhost:56989/Ecology.svc/searchlast10/' + session_key,
+            'GET', null, function (_x) {
+                var obj = JSON.parse(_x);
+                var list = [];
+                for (var i = 0; i < obj.Search10Result.length; i++) {
+                    list.push(obj.Search10Result[i]);
+                    list.push('<br>');
                 }
-            }
-        };
-        xmlhttp.send(null);
+                search_last_10.innerHTML = list.reduce(function (s, x) {
+                    return s + x;
+                }, "");
+
+            });
+
         showDiv(search_last_10);
     };
 
@@ -385,18 +384,21 @@
         document.getElementById('btn_back_from_about_authors').addEventListener('click', onDeviceReady, false);
     };
 
-    function updateMenuClick() {
+    function updateNewsClick() {
         answerDiv.hidden = true;
         showDiv(update_menu_div);
         document.getElementById('btn_update_news').addEventListener('click', updateClick, false);
         document.getElementById('btn_change_relevance_click').addEventListener('click', changeRelevance, false);
+        document.getElementById('btn_back_from_change_relevance_click').addEventListener('click', changeRelevance, false);
     };
+
     function updateClick() {
         answerDiv.hidden = true;
         showDiv(update_news_div);
         document.getElementById('btn_update').addEventListener('click', update, false);
         document.getElementById('btn_back_from_update').addEventListener('click', mainWindow, false);
     };
+
     function update() {
         var request = 'http://localhost:56989/Ecology.svc/addnews/' + session_key;
         send(request, 'POST', JSON.stringify({
@@ -478,6 +480,10 @@
         })
         showDiv(answerDiv);
     };
+
+    function changeRelevance() {
+
+    }
 
     function mainWindow() {
         answerDiv.innerHTML = 'Welcome, ' + user;
