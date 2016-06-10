@@ -168,7 +168,7 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    string m = String.Format("{0} {1} {2} {3}", temp[i].Accident.Accident_Id, temp[i].Accident.Situation.Situation_Name, temp[i].Accident.Place_Adress, temp[i].Accident_Details.Accident_Date.ToString());
+                    string m = String.Format("{0}: {1} ({2})", temp[i].Accident.Situation.Situation_Name, temp[i].Accident.Place_Adress, temp[i].Accident_Details.Accident_Date.ToString());
                     list.Add(m);
                 }
 
@@ -197,7 +197,7 @@ namespace EcologyWatcher.Service
 
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    string str = String.Format("{0} {1} {2} {3}", temp[i].Situation.Situation_Name, Convert.ToDouble(temp[i].Place_Lat), Convert.ToDouble(temp[i].Place_Long), temp[i].Place_Adress);
+                    string str = String.Format("{0}: {1} ({2})", temp[i].Situation.Situation_Name, temp[i].Place_Adress, temp[i].Accident_Details.Last());
                     list.Add(str);
                 }
                 return list;
