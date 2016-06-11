@@ -344,8 +344,8 @@
         send('http://localhost:56989/Ecology.svc/search', 'POST', JSON.stringify({
             Accident_Date: document.getElementById('search_time').value
         }),
-         function (x) {
-            var obj = JSON.parse(x);
+         function (_x) {
+            var obj = JSON.parse(_x);
             var list = [];
             for (var i = 0; i < obj.SearchResult.length; i++) {
                 list.push(obj.SearchResult[i]);
@@ -354,8 +354,9 @@
             search_by_time_div_answer.innerHTML = list.reduce(function (s, x) {
                 return s + x;
             }, "");
-            answerDiv = '';
             showDiv(search_by_time_div_answer);
+            answerDiv.innerHTML = '<button id="back_from_search_by_time_answer">Back</button>';
+            document.getElementById('back_from_search_by_time_answer').addEventListener('click', search, false);
         });
     }
 

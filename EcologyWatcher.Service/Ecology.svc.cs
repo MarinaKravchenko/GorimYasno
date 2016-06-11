@@ -132,11 +132,12 @@ namespace EcologyWatcher.Service
 
             try
             {
+                DateTime? date = DateTime.Parse(date_from.Accident_Date);
                  var temp = db.Accident.Join(db.Accident_Details,
                     ac => ac.Accident_Id,
                     ad => ad.Accident_Id,
                     (ac, ad) => new { Accident = ac, Accident_Details = ad }).
-                    Where(a => (a.Accident_Details.Accident_Date >= DateTime.Parse(date_from.Accident_Date))).ToList();
+                    Where(a => (a.Accident_Details.Accident_Date >= date)).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
