@@ -342,8 +342,9 @@
 
     function search_by_time() {
         send('http://localhost:56989/Ecology.svc/search', 'POST', JSON.stringify({
-            Accident_Date: Date(document.getElementById('search_time').value),
-        }), function (x) {
+            Accident_Date: document.getElementById('search_time').value
+        }),
+         function (x) {
             var obj = JSON.parse(x);
             var list = [];
             for (var i = 0; i < obj.SearchResult.length; i++) {
@@ -384,7 +385,7 @@
                 Position_Lat: coordinates[0],
                 Position_Long: coordinates[1],
                 Address: place,
-                Radius: 1
+                Radius: 5
             }), function (_x) {
                 var obj = JSON.parse(_x);
                 if (obj.SearchGeoResult != null) {

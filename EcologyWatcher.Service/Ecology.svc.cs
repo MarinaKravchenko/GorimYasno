@@ -124,19 +124,19 @@ namespace EcologyWatcher.Service
         }
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, RequestFormat = WebMessageFormat.Json
 , ResponseFormat = WebMessageFormat.Json, UriTemplate = "search")]
-        public List<string> Search(DateTime date_from)
+        public List<string> Search(Update date_from)
         {
             List<string> list = new List<string>();
-            
+
             try
             {
-                var temp = db.Accident.Join(db.Accident_Details,
+                 var temp = db.Accident.Join(db.Accident_Details,
                     ac => ac.Accident_Id,
                     ad => ad.Accident_Id,
                     (ac, ad) => new { Accident = ac, Accident_Details = ad }).
-                    Where(a => (a.Accident_Details.Accident_Date >= date_from)).ToList();
+                    Where(a => (a.Accident_Details.Accident_Date >= DateTime.Parse(date_from.Accident_Date))).ToList();
 
                 for (int i = 0; i < temp.Count; i++)
                 {
